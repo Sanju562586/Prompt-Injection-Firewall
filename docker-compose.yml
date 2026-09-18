@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: llm-firewall-api
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data       # Persist the SQLite audit log
+      - .:/app                  # Live code reload in dev
+    environment:
+      - FIREWALL_DB_PATH=/app/data/audit.db
+
+  dashboard:
+    build: .
+    container_name: llm-firewall-dashboard
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - .:/app
+    environment:
+      - FIREWALL_DB_PATH=/app/data/audit.db
+    depends_on:
+      - api
