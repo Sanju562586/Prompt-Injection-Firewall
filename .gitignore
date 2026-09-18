@@ -34,6 +34,16 @@ htmlcov/
 .vscode/
 .idea/
 
+# Node.js / Frontend
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+*.log
+
 # OS
 .DS_Store
 Thumbs.db
+

@@ -1,126 +1,187 @@
 # 🔥 LLM Firewall — Prompt Injection Security Gateway
 
-A production-grade AI security gateway with dual-stage scanning, RAG poisoning detection, and a 50-case red-team suite.
+A modular, enterprise-grade AI security gateway with dual-stage scanning, RAG context defense, PII masking, LLM reverse proxy, and red-team evaluation suite.
 
-## Features
+---
 
-| Feature | Details |
-|---|---|
-| **Input Scanner** | 3-layer pipeline: regex → sentence-transformer → pre-trained DeBERTa |
-| **Output Scanner** | PII detection (Presidio) + prompt exfiltration detection |
-| **RAG Poisoning Detector** | Scans retrieved documents before they enter LLM context |
-| **Audit Log** | SQLite-backed, every scan recorded with attack type + latency |
-| **Red-Team Suite** | 50 attack vectors across 7 categories with pass/fail scoring |
-| **Interactive Dashboard** | Streamlit UI to test live, view logs, run red-team |
-| **REST API** | FastAPI gateway — 3-line integration |
+## 🏛️ Modular 8-Component Architecture
 
-## Quick Start
+```
+llm-firewall/
+│
+├── gateway/              # Module 1: API endpoints, security middleware, and reverse proxy
+│   ├── api.py            # FastAPI REST router (/v1/scan/*, /v1/chat/completions, /v1/audit)
+│   ├── middleware.py     # Request tracing, latency headers, security headers, CORS
+│   └── proxy.py          # Reverse LLM proxy with pre-call and post-call interception
+│
+├── scanners/             # Module 2: Lifecycle security scanning
+│   ├── input_scanner.py  # Stage 1 user prompt scanner
+│   ├── rag_scanner.py    # RAG document poisoning & indirect injection scanner
+│   ├── output_scanner.py # Stage 2 LLM response & exfiltration scanner
+│   └── pii_scanner.py    # Dedicated PII detector & redactor (Presidio + regex fallback)
+│
+├── detection/            # Module 3: Threat detection & scoring engines
+│   ├── classifier.py     # Transformer classifier (protectai/deberta-v3-base-prompt-injection-v2)
+│   ├── rules.py          # Fast regex & heuristic pattern matching library
+│   ├── risk_engine.py    # Multi-factor threat scoring & risk tier evaluator
+│   └── ensemble.py       # Multi-layer detector ensemble with short-circuiting
+│
+├── audit/                # Module 4: Persistence, telemetry, and forensic models
+│   ├── models.py         # Unified Pydantic schemas (Decision, AttackCategory, RiskLevel, etc.)
+│   ├── logger.py         # Thread-safe audit event logger
+│   └── database.py       # SQLite database manager with WAL mode and indexing
+│
+├── redteam/              # Module 5: Adversarial attack evaluation & benchmarking
+│   ├── attacks/          # Categorized attack suites (DI, JB, RH, II, TS, PE, RP)
+│   ├── runner.py         # CLI & programmatic red-team attack runner
+│   ├── evaluator.py      # Quantitative security metrics (Accuracy, Precision, Recall, Bypass Rate)
+│   └── benchmark.py      # Latency distribution (p50, p95, p99) and throughput benchmark
+│
+├── dashboard/            # Module 6: Interactive SOC Operations Console
+│   └── app.py            # Streamlit dashboard for testing, audit logs, and red-team suite
+│
+├── tests/                # Module 7: Comprehensive test suite
+│   ├── test_gateway.py   # Gateway, middleware, and proxy test cases
+│   ├── test_scanners.py  # Input, output, RAG, and PII scanner test cases
+│   ├── test_detection.py # Rules, risk engine, and ensemble test cases
+│   ├── test_audit.py     # Database, logger, and model test cases
+│   └── test_redteam.py   # Attack collection, runner, and evaluator test cases
+│
+├── config/               # Module 8: Centralized configuration management
+│   ├── config.yaml       # Central YAML settings for thresholds, models, and layers
+│   └── __init__.py       # Config loader with environment variable overrides
+│
+├── Dockerfile            # Container configuration
+├── docker-compose.yml    # Multi-service composition (Gateway, Dashboard, Frontend)
+├── requirements.txt      # Python dependencies
+└── pyproject.toml        # Packaging configuration and CLI entrypoints
+```
 
-### 1. Create virtual environment & install dependencies
+---
 
+## 🚀 Quick Start
+
+### 1. Installation
 ```bash
 python -m venv .venv
-.venv\Scripts\activate          # Windows
-# source .venv/bin/activate     # Linux/macOS
+.venv\Scripts\activate       # Windows
+# source .venv/bin/activate  # Linux/macOS
 
 pip install -r requirements.txt
 python -m spacy download en_core_web_lg
 ```
 
-### 2. Launch the Interactive Dashboard
-
+### 2. Launch the Security Gateway API
 ```bash
-streamlit run dashboard/app.py
+uvicorn gateway.api:app --reload --port 8000
 ```
+Interactive Swagger documentation is available at http://localhost:8000/docs
 
-Open http://localhost:8501 — use the **Test Scanner** tab to try prompts live.
-
-### 3. Launch the REST API
-
+### 3. Launch the Streamlit SOC Dashboard
 ```bash
-uvicorn api.main:app --reload --port 8000
+streamlit run dashboard/app.py --server.port 8501
 ```
-
-Interactive API docs at http://localhost:8000/docs
+Open http://localhost:8501 in your browser.
 
 ### 4. Run the Red-Team Suite
-
 ```bash
 python -m redteam.runner
+# or filter by category:
+python -m redteam.runner --category direct_injection
 ```
 
-### 5. Run Tests
-
+### 5. Run the Latency & Throughput Benchmark
 ```bash
-pytest tests/ -v
+python -m redteam.benchmark --samples 10
 ```
 
-## 3-Line Integration
+### 6. Run Unit & Integration Tests
+```bash
+python -m pytest tests/ -v
+```
 
+---
+
+## 🔌 3-Line Integration Examples
+
+### REST API Integration:
 ```python
 import httpx
 
-response = httpx.post("http://localhost:8000/v1/scan/input",
-                      json={"text": user_prompt})
-if response.json()["decision"] == "BLOCK":
-    raise ValueError(f"Injection detected: {response.json()['reason']}")
+resp = httpx.post("http://localhost:8000/v1/scan/input", json={"text": user_prompt})
+if resp.json()["decision"] == "BLOCK":
+    raise ValueError(f"Threat blocked: {resp.json()['reason']}")
 ```
 
-## Detection Pipeline
+### Direct Python Library Integration:
+```python
+from audit.models import ScanRequest, Decision
+from scanners.input_scanner import scan_input
+
+result = scan_input(ScanRequest(text=user_prompt))
+if result.decision == Decision.BLOCK:
+    print(f"Malicious prompt rejected! Score: {result.score:.2f} ({result.reason})")
+```
+
+### Drop-in Reverse LLM Proxy:
+Configure your OpenAI client base URL to point directly to the firewall gateway:
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8000/v1",
+    api_key="your-openai-key",
+)
+
+# Intercepts prompt -> scans -> forwards -> scans completion -> returns safe output
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "Hello world"}],
+)
+```
+
+---
+
+## 🛡️ Detection Pipeline & Multi-Factor Risk Engine
 
 ```
 User Prompt
     │
     ▼
 ┌─────────────────────────────────────────┐
-│  Layer 1 — Pattern Detector             │  regex + keyword rules (~0ms)
-│  40+ patterns across 6 attack types     │  → BLOCK if score ≥ 0.80
+│  Layer 1 — Pattern & Heuristic Rules    │  Instant (~0ms) regex pre-filter
+│  40+ patterns across 7 attack types     │  → Short-circuit if high-confidence rule match
 └─────────────────────────────────────────┘
-    │ (only if Layer 1 doesn't block)
+    │ (if Layer 1 doesn't block)
     ▼
 ┌─────────────────────────────────────────┐
-│  Layer 2 — Semantic Detector            │  sentence-transformer similarity (~50ms)
-│  Catches paraphrased variants           │  → BLOCK if score ≥ 0.80
+│  Layer 2 — Semantic Vector Similarity   │  sentence-transformer (all-MiniLM-L6-v2)
+│  Embeds & compares against attack seeds │  → Short-circuit if score ≥ 0.78
 └─────────────────────────────────────────┘
-    │ (only if Layer 2 doesn't block)
+    │ (if Layer 2 doesn't block)
     ▼
 ┌─────────────────────────────────────────┐
-│  Layer 3 — DeBERTa Classifier           │  pre-trained HuggingFace model (~200ms)
-│  protectai/deberta-v3-base-prompt-      │  → BLOCK if score ≥ 0.80
-│  injection-v2 (~95% accuracy)           │
+│  Layer 3 — DeBERTa Transformer Model    │  protectai/deberta-v3-base-prompt-injection-v2
+│  Deep semantic injection classification │  → Pre-trained HuggingFace inference
 └─────────────────────────────────────────┘
     │
     ▼
- Decision: BLOCK / WARN / ALLOW + reason + audit log entry
+┌─────────────────────────────────────────┐
+│  Multi-Factor Risk Engine               │  Combines signals, correlates layers,
+│  Assigns RiskLevel (LOW/MED/HIGH/CRIT)  │  evaluates policies & produces final verdict
+└─────────────────────────────────────────┘
+    │
+    ▼
+ Final Decision: BLOCK / WARN / ALLOW + forensic audit log entry
 ```
 
-## Attack Categories (Red-Team)
+---
 
-| ID | Category | # Attacks |
-|---|---|---|
-| DI | Direct Injection | 10 |
-| JB | Jailbreaks | 10 |
-| RH | Role Hijacking | 10 |
-| II | Indirect Injection | 10 |
-| TS | Token Smuggling | 5 |
-| PE | PII Exfiltration | 5 |
-| RP | RAG Poisoning | 5 |
-
-## Docker
+## 🐳 Docker Deployment
 
 ```bash
-docker compose up
+docker compose up --build
 ```
-
-- API:       http://localhost:8000/docs
-- Dashboard: http://localhost:8501
-
-## Tech Stack
-
-- **Python 3.11** · **FastAPI** · **Pydantic v2**
-- **sentence-transformers** (`all-MiniLM-L6-v2`)
-- **HuggingFace Transformers** (`protectai/deberta-v3-base-prompt-injection-v2`)
-- **Microsoft Presidio** (PII detection)
-- **SQLite** (audit log)
-- **Streamlit** (dashboard)
-- **Docker** + **Docker Compose**
+- **Gateway API**: http://localhost:8000/docs
+- **SOC Dashboard**: http://localhost:8501
+- **Next.js Console**: http://localhost:3000

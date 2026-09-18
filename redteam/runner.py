@@ -1,129 +1,139 @@
 """
-Red-Team Test Runner
-Runs all 50+ attack vectors through the firewall and reports detection accuracy.
+Red-Team Module — Attack Suite Runner
+Executes attack vectors against the LLM Firewall and evaluates detection efficacy.
 
 Usage:
-  python -m redteam.runner           # run all attacks
-  python -m redteam.runner --quick   # skip classifier (faster, offline)
-
-Output:
-  - Per-attack: PASS/FAIL, decision, score, reason
-  - Per-category summary: detection rate
-  - Overall: total passed, failed, detection rate
+  python -m redteam.runner
+  python -m redteam.runner --category direct_injection
+  python -m redteam.runner --export report.json
 """
 
 from __future__ import annotations
 import argparse
+import json
+import sys
 import time
 from collections import defaultdict
+from typing import Any, Dict, List, Optional
 
-from firewall.models import ScanRequest, RedTeamResult, Decision
-from firewall.scanner import input_scanner
-from redteam.attacks import ATTACKS
+# Reconfigure stdout for UTF-8 on Windows if needed
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
+from audit.models import Decision, ScanRequest
+from redteam.attacks import ATTACKS, ATTACKS_BY_CATEGORY
+from scanners.input_scanner import scan_input
 
-def _color(text: str, code: str) -> str:
-    """ANSI color helper for terminal output."""
-    return f"\033[{code}m{text}\033[0m"
-
-PASS_ICON = _color("✓ PASS", "32")
-FAIL_ICON = _color("✗ FAIL", "31")
-WARN_COL  = _color("WARN",  "33")
-BLOCK_COL = _color("BLOCK", "31")
-ALLOW_COL = _color("ALLOW", "32")
-
-DECISION_COLOR = {
-    Decision.BLOCK: BLOCK_COL,
-    Decision.WARN:  WARN_COL,
-    Decision.ALLOW: ALLOW_COL,
-}
+PASS_TAG = "[PASS]"
+FAIL_TAG = "[FAIL]"
 
 
-def run_all(verbose: bool = True) -> list[RedTeamResult]:
-    """Run all attack vectors and return results."""
-    results: list[RedTeamResult] = []
+def run_suite(
+    category: Optional[str] = None,
+    attack_ids: Optional[List[str]] = None,
+    verbose: bool = False,
+) -> Dict[str, Any]:
+    """
+    Programmatic execution of red-team suite.
+    """
+    targets = ATTACKS
+    if category and category != "all":
+        targets = ATTACKS_BY_CATEGORY.get(category, [a for a in targets if a.category.value == category])
+    if attack_ids:
+        target_ids = set(attack_ids)
+        targets = [a for a in targets if a.id in target_ids]
 
-    print("\n" + "═" * 70)
-    print("  LLM FIREWALL — RED-TEAM TEST SUITE")
-    print("═" * 70)
+    results: List[Dict[str, Any]] = []
+    category_stats: Dict[str, Dict[str, int]] = defaultdict(lambda: {"total": 0, "passed": 0, "failed": 0})
 
-    for attack in ATTACKS:
-        scan_result = input_scanner.scan(
-            ScanRequest(text=attack.prompt, request_id=attack.id)
-        )
+    start_time = time.perf_counter()
 
-        passed = scan_result.decision == attack.expected_decision
+    for attack in targets:
+        scan_res = scan_input(ScanRequest(text=attack.prompt, request_id=attack.id))
+        passed = (scan_res.decision == attack.expected_decision)
 
-        rt_result = RedTeamResult(
-            attack=attack,
-            actual_decision=scan_result.decision,
-            score=scan_result.score,
-            passed=passed,
-            reason=scan_result.reason,
-        )
-        results.append(rt_result)
+        cat = attack.category.value
+        category_stats[cat]["total"] += 1
+        if passed:
+            category_stats[cat]["passed"] += 1
+        else:
+            category_stats[cat]["failed"] += 1
 
-        if verbose:
-            icon    = PASS_ICON if passed else FAIL_ICON
-            decision_str = DECISION_COLOR.get(scan_result.decision, scan_result.decision.value)
-            print(
-                f"  {icon}  [{attack.id}] {attack.description[:45]:<45} "
-                f"→ {decision_str}  ({scan_result.score:.2f})"
-            )
+        results.append({
+            "id": attack.id,
+            "category": cat,
+            "description": attack.description,
+            "prompt": attack.prompt,
+            "expected_decision": attack.expected_decision.value,
+            "actual_decision": scan_res.decision.value,
+            "score": round(scan_res.score, 4),
+            "risk_level": scan_res.risk_level.value,
+            "passed": passed,
+            "reason": scan_res.reason,
+            "latency_ms": scan_res.latency_ms,
+        })
 
-    return results
+    elapsed_s = round(time.perf_counter() - start_time, 2)
+    total = len(results)
+    passed_count = sum(1 for r in results if r["passed"])
+    failed_count = total - passed_count
+    detection_rate = round((passed_count / total * 100) if total > 0 else 0.0, 1)
 
-
-def print_summary(results: list[RedTeamResult]) -> None:
-    """Print category-level and overall summary."""
-    by_category: dict[str, list[RedTeamResult]] = defaultdict(list)
-    for r in results:
-        by_category[r.attack.category.value].append(r)
-
-    print("\n" + "─" * 70)
-    print("  RESULTS BY CATEGORY")
-    print("─" * 70)
-
-    total_pass = 0
-    total_fail = 0
-
-    for category, cat_results in sorted(by_category.items()):
-        passed = sum(1 for r in cat_results if r.passed)
-        total  = len(cat_results)
-        rate   = passed / total * 100
-        bar    = _color("█" * passed, "32") + _color("░" * (total - passed), "31")
-        print(f"  {category:<25} {bar}  {passed}/{total}  ({rate:.0f}%)")
-        total_pass += passed
-        total_fail += (total - passed)
-
-    overall_rate = total_pass / (total_pass + total_fail) * 100
-
-    print("\n" + "═" * 70)
-    print(f"  OVERALL: {total_pass}/{total_pass + total_fail} attacks detected")
-    print(f"  Detection Rate: {_color(f'{overall_rate:.1f}%', '32' if overall_rate >= 80 else '33')}")
-
-    if total_fail > 0:
-        print(f"\n  {_color('MISSED ATTACKS:', '31')}")
-        for r in results:
-            if not r.passed:
-                print(f"    [{r.attack.id}] {r.attack.description}")
-                print(f"          Expected: {r.attack.expected_decision.value}  Got: {r.actual_decision.value}  Score: {r.score:.2f}")
-
-    print("═" * 70 + "\n")
+    return {
+        "total": total,
+        "passed": passed_count,
+        "failed": failed_count,
+        "detection_rate": detection_rate,
+        "elapsed_seconds": elapsed_s,
+        "category_stats": dict(category_stats),
+        "results": results,
+    }
 
 
-def main():
+def run_cli():
     parser = argparse.ArgumentParser(description="LLM Firewall Red-Team Runner")
-    parser.add_argument("--quiet", action="store_true", help="Suppress per-attack output")
+    parser.add_argument("--category", type=str, default=None, help="Filter by category")
+    parser.add_argument("--quiet", action="store_true", help="Suppress per-attack log")
+    parser.add_argument("--export", type=str, default=None, help="Path to export JSON results")
     args = parser.parse_args()
 
-    start = time.perf_counter()
-    results = run_all(verbose=not args.quiet)
-    elapsed = time.perf_counter() - start
+    print("\n" + "=" * 70)
+    print("  LLM FIREWALL -- RED-TEAM BENCHMARK SUITE")
+    print("=" * 70)
 
-    print_summary(results)
-    print(f"  Completed {len(results)} attacks in {elapsed:.1f}s\n")
+    summary = run_suite(category=args.category, verbose=not args.quiet)
+
+    if not args.quiet:
+        for r in summary["results"]:
+            tag = PASS_TAG if r["passed"] else FAIL_TAG
+            desc = r["description"][:45]
+            print(f"  {tag:<7} [{r['id']}] {desc:<45} -> {r['actual_decision']} ({r['score']:.2f})")
+
+    print("\n" + "-" * 70)
+    print("  BREAKDOWN BY CATEGORY")
+    print("-" * 70)
+
+    for cat, stats in sorted(summary["category_stats"].items()):
+        p = stats["passed"]
+        t = stats["total"]
+        rate = (p / t * 100) if t > 0 else 0.0
+        bar = "#" * p + "." * (t - p)
+        print(f"  {cat:<22} [{bar}] {p}/{t} ({rate:.0f}%)")
+
+    overall_rate = summary["detection_rate"]
+    print("\n" + "=" * 70)
+    print(f"  TOTAL: {summary['passed']}/{summary['total']} attacks caught in {summary['elapsed_seconds']}s")
+    print(f"  OVERALL ACCURACY: {overall_rate:.1f}%")
+    print("=" * 70 + "\n")
+
+    if args.export:
+        with open(args.export, "w", encoding="utf-8") as f:
+            json.dump(summary, f, indent=2)
+        print(f"Results exported to {args.export}\n")
 
 
 if __name__ == "__main__":
-    main()
+    run_cli()

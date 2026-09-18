@@ -1,17 +1,18 @@
 version: "3.9"
 
 services:
-  api:
+  gateway:
     build: .
-    container_name: llm-firewall-api
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    container_name: llm-firewall-gateway
+    command: uvicorn gateway.api:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data       # Persist the SQLite audit log
-      - .:/app                  # Live code reload in dev
+      - ./data:/app/data
+      - .:/app
     environment:
       - FIREWALL_DB_PATH=/app/data/audit.db
+      - FIREWALL_CONFIG_PATH=/app/config/config.yaml
 
   dashboard:
     build: .
@@ -25,4 +26,16 @@ services:
     environment:
       - FIREWALL_DB_PATH=/app/data/audit.db
     depends_on:
-      - api
+      - gateway
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: llm-firewall-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - gateway
