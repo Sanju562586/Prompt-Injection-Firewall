@@ -15,11 +15,11 @@ class SignalWeights(BaseModel):
     Normalized weights for multi-factor signal synthesis.
     Ensures no single signal (including the ML classifier) monopolizes the decision.
     """
-    ml: float = Field(0.35, ge=0.0, le=1.0, description="Weight for ML injection confidence")
-    rule: float = Field(0.25, ge=0.0, le=1.0, description="Weight for heuristic/regex rule signals")
-    document: float = Field(0.20, ge=0.0, le=1.0, description="Weight for RAG document poisoning risk")
+    ml: float = Field(0.30, ge=0.0, le=1.0, description="Weight for ML injection confidence")
+    rule: float = Field(0.30, ge=0.0, le=1.0, description="Weight for heuristic/regex rule signals")
+    document: float = Field(0.25, ge=0.0, le=1.0, description="Weight for RAG document poisoning risk")
     context: float = Field(0.10, ge=0.0, le=1.0, description="Weight for conversational context anomaly")
-    output: float = Field(0.10, ge=0.0, le=1.0, description="Weight for output exfiltration or PII exposure")
+    output: float = Field(0.05, ge=0.0, le=1.0, description="Weight for output exfiltration or PII exposure")
 
 
 class RiskThresholds(BaseModel):
