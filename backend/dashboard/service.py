@@ -13,7 +13,7 @@ from backend.gateway.schemas import ChatCompletionRequest, ChatMessage
 from backend.redteam.runner import RedTeamRunner
 from backend.redteam.schemas import BenchmarkReport
 from backend.dashboard.schemas import DashboardStats, SimulationRequest, SimulationResponse
-from backend.input_scanner.rules.rule_definitions import DEFAULT_RULES
+from backend.input_scanner.rules.patterns import INJECTION_PATTERNS
 
 
 class DashboardService:
@@ -55,7 +55,7 @@ class DashboardService:
             risk_distribution=summary.get("risk_levels", {}),
             attack_type_breakdown=attack_types,
             system_status="OPERATIONAL",
-            active_rules_count=len(DEFAULT_RULES),
+            active_rules_count=len(INJECTION_PATTERNS),
         )
 
     async def simulate(self, req: SimulationRequest) -> SimulationResponse:
@@ -95,7 +95,6 @@ class DashboardService:
             violations = []
             completion_text = "OK"
 
-        # Categorize violations
         input_v = [v for v in violations if "Input" in v]
         rag_v = [v for v in violations if "RAG" in v]
         output_v = [v for v in violations if "Output" in v]
@@ -153,15 +152,15 @@ class DashboardService:
         """Lists active rule definitions and pattern signatures."""
         return [
             {
-                "rule_id": r.rule_id,
-                "name": r.name,
-                "attack_type": r.attack_type.value,
-                "severity": r.severity.value,
-                "description": r.description,
-                "pattern": r.pattern.pattern,
-                "confidence": r.confidence,
+                "rule_id": r["id"],
+                "name": r["name"],
+                "attack_type": r["attack_type"].value,
+                "severity": r["severity"].value,
+                "description": r["description"],
+                "pattern": r["pattern"].pattern,
+                "confidence": r["confidence"],
             }
-            for r in DEFAULT_RULES
+            for r in INJECTION_PATTERNS
         ]
 
     async def run_benchmark(self) -> BenchmarkReport:
