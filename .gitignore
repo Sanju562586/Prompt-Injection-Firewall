@@ -46,3 +46,7 @@ node_modules/
 Thumbs.db
 .vscode/
 .idea/
+
+logs/
+*.db
+*.jsonl

@@ -1,18 +1,20 @@
 ﻿"""
 FastAPI Gateway Application Entrypoint.
-Initializes FastAPI, binds CORS, security headers, rate limiting, and mounts API routes.
+Initializes FastAPI, binds CORS, security headers, rate limiting, and mounts API routes and Dashboard.
 """
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from backend.gateway.middleware import SecurityHeadersMiddleware, TokenBucketRateLimiter
-from backend.gateway.routes import router
+from backend.gateway.routes import router as gateway_router
+from backend.dashboard.routes import router as dashboard_router
 
 def create_app() -> FastAPI:
     """Factory function for FastAPI LLM Security Firewall application."""
     app = FastAPI(
         title="Prompt Injection Firewall & Security Gateway",
-        description="Comprehensive Enterprise LLM Defense Gateway: Input Scanner, RAG Detector, Risk Engine, Output Scanner.",
+        description="Comprehensive Enterprise LLM Defense Gateway: Input Scanner, RAG Detector, Risk Engine, Output Scanner, Audit Logger, Red-Team, and Dashboard.",
         version="1.0.0",
     )
 
@@ -31,17 +33,13 @@ def create_app() -> FastAPI:
         rate_limiter=TokenBucketRateLimiter(rate=100.0, capacity=200.0),
     )
 
-    # Mount API routes
-    app.include_router(router)
+    # Mount API routes and Dashboard
+    app.include_router(gateway_router)
+    app.include_router(dashboard_router)
 
     @app.get("/", tags=["System"])
     async def root():
-        return {
-            "name": "Prompt Injection Firewall Gateway",
-            "status": "online",
-            "docs": "/docs",
-            "health": "/health",
-        }
+        return RedirectResponse(url="/dashboard")
 
     return app
 
