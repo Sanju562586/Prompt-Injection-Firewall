@@ -24,10 +24,10 @@ class GroundingChecker:
         if not combined_context.strip():
             return violations
 
-        # 1. Check numbers/metrics (e.g. monetary figures, percentages, dates)
-        number_pattern = re.compile(r"\b(?:\$\d+(?:,\d{3})*(?:\.\d+)?|\d+%(?:|\.\d+%)|\d{4}-\d{2}-\d{2})\b")
+        # 1. Check numbers/metrics (e.g. monetary figures like $5M, percentages like 45%, dates like 2023-01-01)
+        number_pattern = re.compile(r"(?:\$\s*\d+(?:,\d{3})*(?:\.\d+)?[kKmMbB]?|\b\d+(?:\.\d+)?%|\b\d{4}-\d{2}-\d{2}\b)")
         response_numbers = number_pattern.findall(response_text)
-        
+
         ungrounded_numbers = []
         for num in response_numbers:
             if num.lower() not in combined_context:
@@ -38,7 +38,7 @@ class GroundingChecker:
                 Violation(
                     violation_type=ViolationType.HALLUCINATION,
                     severity=Severity.MEDIUM if len(ungrounded_numbers) == 1 else Severity.HIGH,
-                    description=f"Output contains ungrounded numerical metrics or dates not present in retrieved context: {', '.join(ungrounded_numbers[:3])}",
+                    description=f"Output contains ungrounded numerical metrics or figures not present in retrieved context: {', '.join(ungrounded_numbers[:3])}",
                     matched_text=", ".join(ungrounded_numbers[:3]),
                     replacement=None,
                     metadata={"ungrounded_figures": ungrounded_numbers}
@@ -61,7 +61,6 @@ class GroundingChecker:
         if len(resp_tokens) >= 5:
             overlap = len(resp_tokens.intersection(ctx_tokens))
             overlap_ratio = overlap / len(resp_tokens)
-            # If less than 20% of substantial response words appear in context, flag hallucination
             if overlap_ratio < 0.20:
                 violations.append(
                     Violation(
