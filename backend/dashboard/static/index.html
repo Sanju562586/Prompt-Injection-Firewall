@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,28 +9,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #090d16;
-      --bg-card: rgba(17, 24, 39, 0.75);
-      --bg-card-hover: rgba(26, 34, 53, 0.85);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(99, 102, 241, 0.35);
-      --primary: #6366f1;
-      --primary-glow: rgba(99, 102, 241, 0.4);
-      --accent: #8b5cf6;
+      --bg-dark: #f8f7fc;
+      --bg-card: #ffffff;
+      --bg-card-hover: #fcfbfe;
+      --border-subtle: #e8e2f6;
+      --border-card: #e4ddf5;
+      --border-glow: rgba(124, 92, 252, 0.25);
+      --primary: #7c5cfc;
+      --primary-hover: #6a46f9;
+      --primary-glow: rgba(124, 92, 252, 0.2);
+      --primary-bg: #f2effd;
+      --accent: #9373fc;
       --success: #10b981;
+      --success-bg: #ecfdf5;
       --warning: #f59e0b;
+      --warning-bg: #fffbeb;
       --danger: #ef4444;
+      --danger-bg: #fef2f2;
       --critical: #dc2626;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+      --text-main: #1d192b;
+      --text-muted: #5f5774;
+      --text-dim: #8b839f;
       --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 2px 8px rgba(124, 92, 252, 0.05);
+      --shadow-card: 0 4px 20px rgba(124, 92, 252, 0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-                  radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+      background: radial-gradient(circle at 10% 10%, rgba(124, 92, 252, 0.05) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 90%, rgba(147, 115, 252, 0.04) 0%, transparent 40%),
                   var(--bg-dark);
       color: var(--text-main);
       font-family: var(--font-main);
@@ -60,7 +69,7 @@
     .brand-sub { font-size: 0.8rem; color: var(--text-muted); }
     .status-badge {
       display: flex; align-items: center; gap: 8px;
-      background: rgba(16, 185, 129, 0.12);
+      background: var(--success-bg);
       border: 1px solid rgba(16, 185, 129, 0.3);
       color: var(--success);
       padding: 6px 14px; border-radius: 9999px;
@@ -81,15 +90,16 @@
     }
     .metric-card {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-card);
       border-radius: 16px; padding: 22px;
+      box-shadow: var(--shadow-sm);
       transition: all 0.2s ease;
       position: relative; overflow: hidden;
     }
     .metric-card:hover {
       background: var(--bg-card-hover);
-      border-color: var(--border-glow);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-card);
       transform: translateY(-2px);
     }
     .metric-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
@@ -106,9 +116,9 @@
 
     .card {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-card);
       border-radius: 16px; padding: 26px;
+      box-shadow: var(--shadow-sm);
     }
     .card-title {
       font-size: 1.15rem; font-weight: 700; margin-bottom: 16px;
@@ -119,22 +129,22 @@
     .form-group { margin-bottom: 16px; }
     label { display: block; font-size: 0.84rem; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
     textarea, input, select {
-      width: 100%; background: rgba(10, 14, 26, 0.8);
-      border: 1px solid var(--border-subtle);
+      width: 100%; background: #ffffff;
+      border: 1px solid var(--border-card);
       border-radius: 10px; color: var(--text-main);
       padding: 12px; font-family: var(--font-mono); font-size: 0.88rem;
       outline: none; transition: border-color 0.2s;
     }
     textarea:focus, input:focus, select:focus {
-      border-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow);
+      border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow);
     }
     .preset-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
     .btn-chip {
-      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle);
-      color: var(--text-muted); padding: 5px 12px; border-radius: 8px;
-      font-size: 0.75rem; cursor: pointer; transition: all 0.15s;
+      background: var(--primary-bg); border: 1px solid var(--border-subtle);
+      color: var(--primary); padding: 5px 12px; border-radius: 8px;
+      font-size: 0.75rem; cursor: pointer; transition: all 0.15s; font-weight: 600;
     }
-    .btn-chip:hover { background: rgba(99, 102, 241, 0.2); color: var(--text-main); border-color: var(--primary); }
+    .btn-chip:hover { background: var(--primary); color: #ffffff; border-color: var(--primary); }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -147,16 +157,16 @@
     /* Verdict Box */
     .verdict-box {
       margin-top: 20px; padding: 18px; border-radius: 12px;
-      background: rgba(10, 14, 26, 0.9); border: 1px solid var(--border-subtle);
+      background: var(--primary-bg); border: 1px solid var(--border-subtle);
       display: none;
     }
     .verdict-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .badge-decision {
       padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
     }
-    .badge-block { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); }
-    .badge-allow { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.4); }
-    .badge-quarantine { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-block { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-allow { background: var(--success-bg); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-quarantine { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.4); }
 
     /* Risk Meter Gauge */
     .risk-meter-wrap { margin-bottom: 16px; }
@@ -166,8 +176,8 @@
       position: relative; margin-top: 8px;
     }
     .risk-pointer {
-      position: absolute; top: -4px; width: 4px; height: 20px; background: #fff;
-      border-radius: 2px; box-shadow: 0 0 8px #fff; transform: translateX(-50%);
+      position: absolute; top: -4px; width: 4px; height: 20px; background: #1d192b;
+      border-radius: 2px; box-shadow: 0 0 4px rgba(0,0,0,0.3); transform: translateX(-50%);
       transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .risk-legend { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; }
@@ -175,8 +185,8 @@
     /* Tables */
     table { width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left; }
     th { color: var(--text-muted); font-weight: 600; padding: 12px; border-bottom: 1px solid var(--border-subtle); }
-    td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
-    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    td { padding: 12px; border-bottom: 1px solid var(--border-subtle); }
+    tr:hover td { background: rgba(124, 92, 252, 0.03); }
     .mono { font-family: var(--font-mono); }
 
     .tag-sm { padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
@@ -284,7 +294,7 @@
 
           <div style="font-size: 0.84rem; margin-top: 12px;">
             <div style="color: var(--text-muted); margin-bottom: 4px;">Forensic Explanation:</div>
-            <div id="verdict-explanation" class="mono" style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; font-size: 0.8rem;"></div>
+            <div id="verdict-explanation" class="mono" style="background: #ffffff; border: 1px solid var(--border-subtle); color: var(--text-main); padding: 10px; border-radius: 8px; font-size: 0.8rem;"></div>
           </div>
 
           <div id="verdict-violations-wrap" style="margin-top: 10px; display: none;">
@@ -310,15 +320,15 @@
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px;">
-          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; text-align: center;">
+          <div style="background: var(--primary-bg); border: 1px solid var(--border-subtle); padding: 12px; border-radius: 10px; text-align: center;">
             <div style="font-size: 0.75rem; color: var(--text-muted);">Attack Recall</div>
             <div id="bm-recall" style="font-size: 1.3rem; font-weight: 700; color: var(--success);">-</div>
           </div>
-          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; text-align: center;">
+          <div style="background: var(--primary-bg); border: 1px solid var(--border-subtle); padding: 12px; border-radius: 10px; text-align: center;">
             <div style="font-size: 0.75rem; color: var(--text-muted);">False Positive Rate</div>
             <div id="bm-fpr" style="font-size: 1.3rem; font-weight: 700; color: var(--text-muted);">-</div>
           </div>
-          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; text-align: center;">
+          <div style="background: var(--primary-bg); border: 1px solid var(--border-subtle); padding: 12px; border-radius: 10px; text-align: center;">
             <div style="font-size: 0.75rem; color: var(--text-muted);">Overall Accuracy</div>
             <div id="bm-accuracy" style="font-size: 1.3rem; font-weight: 700; color: var(--primary);">-</div>
           </div>
@@ -430,7 +440,7 @@
                 <td class="mono" style="color:var(--text-muted);">${dateStr}</td>
                 <td class="mono">${e.request_id}</td>
                 <td class="mono" style="font-weight:700;">${e.risk_score.toFixed(2)}</td>
-                <td><span class="tag-sm" style="background:rgba(255,255,255,0.06);">${e.risk_level}</span></td>
+                <td><span class="tag-sm" style="background:var(--primary-bg); color:var(--primary); border:1px solid var(--border-subtle);">${e.risk_level}</span></td>
                 <td><span class="tag-sm ${decClass}">${e.decision}</span></td>
                 <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                   ${e.violations && e.violations.length > 0 ? e.violations.join(', ') : (e.input_snippet || 'Clean')}

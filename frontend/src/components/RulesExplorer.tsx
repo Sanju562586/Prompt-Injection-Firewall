@@ -39,7 +39,7 @@ export default function RulesExplorer() {
     <div style={cardStyle}>
       <div style={titleStyle}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Code2 size={20} color="var(--primary-light)" />
+          <Code2 size={20} color="var(--primary)" />
           <span>Active Threat Signatures & Heuristics (Module 1)</span>
         </div>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -51,56 +51,58 @@ export default function RulesExplorer() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: 'var(--text-muted)' }}>
-              <th style={{ padding: '10px 14px' }}>Rule ID</th>
-              <th style={{ padding: '10px 14px' }}>Threat Name & Description</th>
-              <th style={{ padding: '10px 14px' }}>Attack Type</th>
-              <th style={{ padding: '10px 14px' }}>Severity</th>
-              <th style={{ padding: '10px 14px' }}>Confidence</th>
-              <th style={{ padding: '10px 14px' }}>Regex Signature Pattern</th>
+              <th style={{ padding: '12px 14px', fontWeight: 600 }}>Rule ID</th>
+              <th style={{ padding: '12px 14px', fontWeight: 600 }}>Threat Name & Description</th>
+              <th style={{ padding: '12px 14px', fontWeight: 600 }}>Attack Type</th>
+              <th style={{ padding: '12px 14px', fontWeight: 600 }}>Severity</th>
+              <th style={{ padding: '12px 14px', fontWeight: 600 }}>Confidence</th>
+              <th style={{ padding: '12px 14px', fontWeight: 600 }}>Regex Signature Pattern</th>
             </tr>
           </thead>
           <tbody>
             {rules.map((r) => {
               const isCrit = r.severity === 'CRITICAL';
               return (
-                <tr key={r.rule_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                  <td style={{ padding: '10px 14px', fontFamily: 'var(--font-mono)', color: 'var(--primary-light)', fontWeight: 600 }}>
+                <tr key={r.rule_id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', color: 'var(--primary)', fontWeight: 600 }}>
                     {r.rule_id}
                   </td>
-                  <td style={{ padding: '10px 14px' }}>
-                    <strong>{r.name}</strong>
-                    <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>{r.description}</div>
+                  <td style={{ padding: '12px 14px' }}>
+                    <strong style={{ color: 'var(--text-main)' }}>{r.name}</strong>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>{r.description}</div>
                   </td>
-                  <td style={{ padding: '10px 14px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', fontSize: '0.78rem' }}>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', color: 'var(--primary)', fontSize: '0.78rem', fontWeight: 600 }}>
                     {r.attack_type}
                   </td>
-                  <td style={{ padding: '10px 14px' }}>
+                  <td style={{ padding: '12px 14px' }}>
                     <span style={{
-                      padding: '2px 8px',
+                      padding: '3px 8px',
                       borderRadius: '6px',
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      background: isCrit ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                      color: isCrit ? '#f87171' : '#fbbf24',
-                      border: `1px solid ${isCrit ? 'rgba(239, 68, 68, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
+                      background: isCrit ? 'var(--danger-bg)' : 'var(--warning-bg)',
+                      color: isCrit ? 'var(--danger)' : 'var(--warning)',
+                      border: `1px solid ${isCrit ? 'var(--danger-border)' : 'var(--warning-border)'}`,
                     }}>
                       {r.severity}
                     </span>
                   </td>
-                  <td style={{ padding: '10px 14px', fontFamily: 'var(--font-mono)' }}>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', color: 'var(--text-main)', fontWeight: 600 }}>
                     {(r.confidence * 100).toFixed(0)}%
                   </td>
                   <td style={{
-                    padding: '10px 14px',
+                    padding: '12px 14px',
                     fontFamily: 'var(--font-mono)',
                     fontSize: '0.74rem',
-                    color: 'var(--text-dim)',
+                    color: 'var(--text-muted)',
                     maxWidth: '320px',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}>
-                    {r.pattern}
+                    <code style={{ background: 'var(--bg-subtle)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                      {r.pattern}
+                    </code>
                   </td>
                 </tr>
               );
@@ -113,18 +115,19 @@ export default function RulesExplorer() {
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-card)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid var(--border-subtle)',
+  background: '#ffffff',
+  border: '1px solid var(--border-card)',
   borderRadius: '16px',
-  padding: '22px',
+  padding: '24px',
+  boxShadow: 'var(--shadow-sm)',
 };
 
 const titleStyle: React.CSSProperties = {
   fontSize: '1.12rem',
   fontWeight: 700,
-  marginBottom: '14px',
+  marginBottom: '16px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  color: 'var(--text-main)',
 };

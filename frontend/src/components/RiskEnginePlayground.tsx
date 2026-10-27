@@ -82,7 +82,7 @@ export default function RiskEnginePlayground() {
           <button
             onClick={loadUserSpec}
             style={{
-              background: 'linear-gradient(135deg, var(--primary), var(--cyan))',
+              background: 'linear-gradient(135deg, var(--primary), var(--primary-light))',
               color: '#fff',
               border: 'none',
               padding: '6px 14px',
@@ -241,15 +241,15 @@ export default function RiskEnginePlayground() {
 
         {/* Risk Gauge Bar */}
         <div style={{
-          background: 'rgba(10, 15, 29, 0.85)',
+          background: 'var(--bg-subtle)',
           border: '1px solid var(--border-subtle)',
           borderRadius: '12px',
           padding: '16px',
           marginBottom: '16px',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-            <span>Composite Calculated Risk</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+            <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Composite Calculated Risk</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--text-main)' }}>
               {overallRisk.toFixed(3)} / 1.000
             </span>
           </div>
@@ -266,9 +266,9 @@ export default function RiskEnginePlayground() {
               top: '-4px',
               width: '6px',
               height: '24px',
-              background: '#fff',
+              background: '#1d192b',
               borderRadius: '2px',
-              boxShadow: '0 0 10px #fff, 0 0 20px var(--primary-glow)',
+              boxShadow: '0 0 8px rgba(124, 92, 252, 0.4)',
               transform: 'translateX(-50%)',
               left: `${riskPct}%`,
               transition: 'left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -289,7 +289,9 @@ export default function RiskEnginePlayground() {
           </div>
           <div style={{
             fontFamily: 'var(--font-mono)',
-            background: 'rgba(0, 0, 0, 0.45)',
+            background: 'var(--bg-subtle)',
+            border: '1px solid var(--border-subtle)',
+            color: 'var(--text-main)',
             padding: '12px',
             borderRadius: '8px',
             fontSize: '0.78rem',
@@ -306,7 +308,9 @@ export default function RiskEnginePlayground() {
           </div>
           <div style={{
             fontFamily: 'var(--font-mono)',
-            background: 'rgba(0, 0, 0, 0.45)',
+            background: 'var(--primary-bg)',
+            border: '1px solid var(--border-subtle)',
+            color: 'var(--text-main)',
             padding: '12px',
             borderRadius: '8px',
             fontSize: '0.78rem',
@@ -321,11 +325,11 @@ export default function RiskEnginePlayground() {
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-card)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid var(--border-subtle)',
+  background: '#ffffff',
+  border: '1px solid var(--border-card)',
   borderRadius: '16px',
   padding: '22px',
+  boxShadow: 'var(--shadow-sm)',
 };
 
 const titleStyle: React.CSSProperties = {
@@ -335,6 +339,7 @@ const titleStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  color: 'var(--text-main)',
 };
 
 const sliderHeader: React.CSSProperties = {
@@ -347,31 +352,32 @@ const sliderHeader: React.CSSProperties = {
 const labelStyle: React.CSSProperties = {
   fontSize: '0.82rem',
   color: 'var(--text-muted)',
-  fontWeight: 500,
+  fontWeight: 600,
 };
 
 const sliderValStyle: React.CSSProperties = {
   fontFamily: 'var(--font-mono)',
   fontWeight: 700,
-  color: 'var(--primary-light)',
+  color: 'var(--primary)',
 };
 
 const rangeStyle: React.CSSProperties = {
   width: '100%',
   height: '6px',
   borderRadius: '3px',
-  background: 'rgba(255, 255, 255, 0.1)',
+  background: 'var(--border-subtle)',
   outline: 'none',
   cursor: 'pointer',
 };
 
 const chipStyle: React.CSSProperties = {
-  background: 'rgba(255, 255, 255, 0.05)',
+  background: 'var(--primary-bg)',
   border: '1px solid var(--border-subtle)',
-  color: 'var(--text-muted)',
+  color: 'var(--primary)',
   padding: '6px 12px',
   borderRadius: '8px',
   fontSize: '0.75rem',
   cursor: 'pointer',
-  fontWeight: 500,
+  fontWeight: 600,
+  transition: 'all 0.15s',
 };

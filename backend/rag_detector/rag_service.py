@@ -211,7 +211,12 @@ class RAGService:
         safe_context_texts = [f"Source [{c.title}]:\n{c.content}" for c in safe_chunks]
         system_instructions = (
             req.system_prompt
-            or "You are ACME Corp's Enterprise AI Assistant. Provide accurate, helpful, and professional answers strictly grounded in the verified reference documents. If the documents do not contain the answer, politely state so."
+            or (
+                "You are ACME Corp's Enterprise AI Assistant. Provide accurate, helpful, and professional answers. "
+                "When relevant reference documents are provided, ground your answer in them and cite the document names. "
+                "If no reference documents are provided or if the documents do not cover the user's question, "
+                "answer comprehensively using your general pre-trained knowledge."
+            )
         )
 
         from backend.gateway.schemas import ChatMessage
@@ -222,7 +227,7 @@ class RAGService:
 
         # Generate answer
         raw_completion, _ = await self.llm_proxy.generate_completion(
-            model="gpt-4o",
+            model=self.llm_proxy.default_model,
             messages=messages,
             documents=safe_context_texts if safe_context_texts else None,
             temperature=req.temperature,
@@ -323,3 +328,4 @@ class RAGService:
                 "action": "QUARANTINE_SAFE" if quarantined_chunks else "ALLOW",
             }
         )
+

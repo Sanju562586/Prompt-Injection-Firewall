@@ -28,7 +28,9 @@ export default function MetricsOverview({
       <div style={cardStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={labelStyle}>Guarded Requests</span>
-          <ShieldCheck size={18} color="var(--primary-light)" />
+          <div style={iconBoxStyle}>
+            <ShieldCheck size={18} color="var(--primary)" />
+          </div>
         </div>
         <div style={valStyle}>{totalRequests}</div>
         <div style={subStyle}>Scanned by 5 security layers</div>
@@ -37,7 +39,9 @@ export default function MetricsOverview({
       <div style={cardStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={labelStyle}>Threat Block Rate</span>
-          <ShieldAlert size={18} color="var(--danger)" />
+          <div style={{ ...iconBoxStyle, background: 'var(--danger-bg)' }}>
+            <ShieldAlert size={18} color="var(--danger)" />
+          </div>
         </div>
         <div style={{ ...valStyle, color: 'var(--danger)' }}>{blockRate.toFixed(1)}%</div>
         <div style={subStyle}>{totalBlocked} malicious payloads halted</div>
@@ -46,16 +50,20 @@ export default function MetricsOverview({
       <div style={cardStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={labelStyle}>Pipeline Latency</span>
-          <Zap size={18} color="var(--cyan)" />
+          <div style={iconBoxStyle}>
+            <Zap size={18} color="var(--primary)" />
+          </div>
         </div>
-        <div style={{ ...valStyle, color: 'var(--cyan)' }}>{avgLatencyMs.toFixed(1)} ms</div>
-        <div style={subStyle}>DeBERTa ML + Regex + RAG + Output</div>
+        <div style={{ ...valStyle, color: 'var(--primary)' }}>{avgLatencyMs.toFixed(1)} ms</div>
+        <div style={subStyle}>DeBERTa ML + Heuristics + RAG</div>
       </div>
 
       <div style={cardStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={labelStyle}>Active Threat Signatures</span>
-          <Layers size={18} color="var(--success)" />
+          <div style={{ ...iconBoxStyle, background: 'var(--success-bg)' }}>
+            <Layers size={18} color="var(--success)" />
+          </div>
         </div>
         <div style={{ ...valStyle, color: 'var(--success)' }}>{activeRulesCount}</div>
         <div style={subStyle}>High-precision rules & heuristics</div>
@@ -65,18 +73,28 @@ export default function MetricsOverview({
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-card)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid var(--border-subtle)',
-  borderRadius: '14px',
+  background: '#ffffff',
+  border: '1px solid var(--border-card)',
+  borderRadius: '16px',
   padding: '18px 22px',
+  boxShadow: 'var(--shadow-sm)',
   transition: 'all 0.2s ease',
+};
+
+const iconBoxStyle: React.CSSProperties = {
+  width: '32px',
+  height: '32px',
+  borderRadius: '8px',
+  background: 'var(--primary-bg)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 };
 
 const labelStyle: React.CSSProperties = {
   fontSize: '0.82rem',
   color: 'var(--text-muted)',
-  fontWeight: 500,
+  fontWeight: 600,
   marginBottom: '4px',
 };
 
@@ -84,6 +102,8 @@ const valStyle: React.CSSProperties = {
   fontSize: '1.9rem',
   fontWeight: 800,
   letterSpacing: '-0.02em',
+  color: 'var(--text-main)',
+  marginTop: '4px',
 };
 
 const subStyle: React.CSSProperties = {

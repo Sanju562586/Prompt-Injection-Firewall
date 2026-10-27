@@ -47,9 +47,12 @@ export default function Header({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingBottom: '16px',
-        borderBottom: '1px solid var(--border-subtle)',
-        marginBottom: '16px',
+        padding: '16px 20px',
+        background: '#ffffff',
+        border: '1px solid var(--border-card)',
+        borderRadius: '16px',
+        marginBottom: '18px',
+        boxShadow: 'var(--shadow-sm)',
         flexWrap: 'wrap',
         gap: '16px'
       }}>
@@ -58,26 +61,27 @@ export default function Header({
             width: '46px',
             height: '46px',
             borderRadius: '12px',
-            background: 'linear-gradient(135deg, var(--primary), var(--cyan))',
+            background: 'linear-gradient(135deg, #7c5cfc, #9d85fc)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 24px var(--primary-glow)',
+            boxShadow: '0 4px 14px rgba(124, 92, 252, 0.25)',
           }}>
-            <Shield size={24} color="#fff" />
+            <Shield size={24} color="#ffffff" />
           </div>
           <div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 800, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-main)' }}>
               <span>Prompt Injection Firewall</span>
               <span style={{
-                background: 'rgba(56, 189, 248, 0.15)',
-                color: '#38bdf8',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                padding: '0.15rem 0.55rem',
+                background: 'var(--primary-bg)',
+                color: 'var(--primary)',
+                border: '1px solid var(--border-subtle)',
+                padding: '0.18rem 0.6rem',
                 borderRadius: '999px',
                 fontSize: '0.72rem',
                 fontWeight: 700,
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em'
               }}>
                 RAG Enterprise Gateway
               </span>
@@ -93,22 +97,21 @@ export default function Header({
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(16, 185, 129, 0.12)',
-            border: '1px solid rgba(16, 185, 129, 0.35)',
+            background: 'var(--success-bg)',
+            border: '1px solid var(--success-border)',
             color: 'var(--success)',
-            padding: '6px 14px',
+            padding: '7px 16px',
             borderRadius: '9999px',
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
+            fontSize: '0.78rem',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
           }}>
             <div style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
               background: 'var(--success)',
-              boxShadow: '0 0 10px var(--success)',
+              boxShadow: '0 0 8px rgba(5, 150, 105, 0.4)',
             }} />
             Firewall Active & Protecting
           </div>
@@ -119,11 +122,12 @@ export default function Header({
       <nav style={{
         display: 'flex',
         gap: '8px',
-        background: 'rgba(22, 27, 34, 0.6)',
+        background: '#ffffff',
         padding: '6px',
-        borderRadius: '12px',
-        border: '1px solid var(--border-subtle)',
+        borderRadius: '14px',
+        border: '1px solid var(--border-card)',
         marginBottom: activeTab === 'telemetry' ? '12px' : '20px',
+        boxShadow: 'var(--shadow-sm)',
         overflowX: 'auto',
       }}>
         {mainTabs.map(tab => {
@@ -138,16 +142,16 @@ export default function Header({
                 alignItems: 'center',
                 gap: '8px',
                 padding: '10px 18px',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 border: 'none',
-                background: isActive ? 'var(--primary)' : 'transparent',
-                color: isActive ? '#fff' : 'var(--text-muted)',
+                background: isActive ? 'linear-gradient(135deg, #7c5cfc, #6a46f9)' : 'transparent',
+                color: isActive ? '#ffffff' : 'var(--text-muted)',
                 fontWeight: isActive ? 600 : 500,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.18s ease',
                 whiteSpace: 'nowrap',
-                boxShadow: isActive ? '0 4px 14px var(--primary-glow)' : 'none',
+                boxShadow: isActive ? '0 4px 14px rgba(124, 92, 252, 0.28)' : 'none',
               }}
             >
               <Icon size={17} />
@@ -155,10 +159,10 @@ export default function Header({
               {tab.badge && (
                 <span style={{
                   fontSize: '0.68rem',
-                  padding: '1px 6px',
+                  padding: '2px 7px',
                   borderRadius: '999px',
-                  background: isActive ? 'rgba(255,255,255,0.25)' : 'rgba(56, 189, 248, 0.15)',
-                  color: isActive ? '#fff' : '#38bdf8',
+                  background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'var(--primary-bg)',
+                  color: isActive ? '#ffffff' : 'var(--primary)',
                   fontWeight: 700
                 }}>
                   {tab.badge}
@@ -174,10 +178,10 @@ export default function Header({
         <div style={{
           display: 'flex',
           gap: '6px',
-          background: 'rgba(13, 17, 23, 0.5)',
-          padding: '4px',
-          borderRadius: '10px',
-          border: '1px solid rgba(48, 54, 61, 0.5)',
+          background: 'var(--bg-subtle)',
+          padding: '5px',
+          borderRadius: '12px',
+          border: '1px solid var(--border-card)',
           marginBottom: '20px',
           overflowX: 'auto',
           animation: 'fadeIn 0.15s ease-out'
@@ -193,16 +197,17 @@ export default function Header({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '7px 14px',
-                  borderRadius: '6px',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
                   border: 'none',
-                  background: isSubActive ? 'rgba(56, 189, 248, 0.18)' : 'transparent',
-                  color: isSubActive ? '#38bdf8' : '#8b949e',
+                  background: isSubActive ? '#ffffff' : 'transparent',
+                  color: isSubActive ? 'var(--primary)' : 'var(--text-muted)',
                   fontWeight: isSubActive ? 600 : 500,
                   fontSize: '0.8rem',
                   cursor: 'pointer',
                   transition: 'all 0.15s',
                   whiteSpace: 'nowrap',
+                  boxShadow: isSubActive ? '0 2px 6px rgba(124, 92, 252, 0.1)' : 'none',
                 }}
               >
                 <SubIcon size={14} />

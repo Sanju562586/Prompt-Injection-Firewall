@@ -266,9 +266,8 @@ class KnowledgeBase:
                 scored_chunks.append(sc_m)
 
         scored_chunks.sort(key=lambda x: x.score, reverse=True)
-        if not scored_chunks:
-            return [c.model_copy() for c in self.chunks[:top_k]]
-
+        # Only return chunks with positive relevance score; never return random fallbacks
+        # for unrelated queries (that would cause off-topic hallucinations).
         return scored_chunks[:top_k]
 
     def reset_to_defaults(self):

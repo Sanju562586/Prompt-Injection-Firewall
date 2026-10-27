@@ -10,6 +10,7 @@ import math
 import logging
 from typing import List, Optional, Tuple
 from backend.gateway.schemas import ChatMessage, UsageInfo
+from backend.gateway.knowledge_synth import synthesize_general_knowledge
 
 logger = logging.getLogger("Gateway.Proxy")
 
@@ -79,7 +80,12 @@ class DownstreamLLMProxy:
                     doc_context = "\n\n---\n\n".join(documents)
                     payload_messages.append({
                         "role": "system",
-                        "content": f"Use the following reference documents to answer the query accurately:\n\n{doc_context}"
+                        "content": (
+                            f"Reference Documents:\n\n{doc_context}\n\n"
+                            "Use the reference documents above when relevant. "
+                            "If the query asks for general knowledge or information outside these documents, "
+                            "answer directly and comprehensively from your pre-trained knowledge."
+                        )
                     })
 
                 for m in messages:
@@ -120,7 +126,11 @@ class DownstreamLLMProxy:
                 if documents:
                     ollama_messages.append({
                         "role": "system",
-                        "content": "Context:\n" + "\n---\n".join(documents)
+                        "content": (
+                            "Context Reference Documents:\n" + "\n---\n".join(documents)
+                            + "\n\nUse the reference documents when relevant. If the query asks for general knowledge "
+                            + "or information outside these documents, answer directly and comprehensively from your pre-trained knowledge."
+                        )
                     })
                 for m in messages:
                     ollama_messages.append({"role": m.role, "content": m.content})
@@ -163,8 +173,8 @@ class DownstreamLLMProxy:
             if not user_query:
                 content = "I am ready to assist with corporate documentation, policies, and inquiries."
             else:
-                content = f"Regarding your question: '{user_query}' — no matching knowledge documents were found in the index. Please upload relevant documentation or refine your search terms."
-            return content, UsageInfo(prompt_tokens=max(1, len(user_query)//4), completion_tokens=len(content)//4, total_tokens=50)
+                content = synthesize_general_knowledge(user_query)
+            return content, UsageInfo(prompt_tokens=max(1, len(user_query)//4), completion_tokens=len(content)//4, total_tokens=max(2, (len(user_query) + len(content))//4))
 
         # Extract meaningful query keywords
         query_words = [w.lower() for w in re.findall(r"\b\w{3,}\b", user_query)]
@@ -221,16 +231,8 @@ class DownstreamLLMProxy:
                 f"*Source: {primary_title}*"
             )
         else:
-            # If query is broad, summarize key points from the first document
-            first_doc = documents[0]
-            clean_text = first_doc
-            if "]:\n" in first_doc:
-                clean_text = first_doc.split("]:\n", 1)[1]
-            sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", clean_text) if len(s.strip()) > 15][:3]
-            content = (
-                f"Based on the available documentation:\n\n"
-                + "\n\n".join(f"• {s}" for s in sentences)
-            )
+            # When documents do not contain relevant facts for this prompt, answer from pre-trained knowledge
+            content = synthesize_general_knowledge(user_query)
 
         prompt_len = sum(len(m.content) for m in messages) // 4
         comp_len = len(content) // 4

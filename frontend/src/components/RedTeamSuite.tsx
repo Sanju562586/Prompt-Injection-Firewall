@@ -80,7 +80,7 @@ export default function RedTeamSuite() {
       </p>
 
       <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-        Status: <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>{statusMsg}</span>
+        Status: <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{statusMsg}</span>
       </div>
 
       {/* KPI Cards */}
@@ -106,14 +106,14 @@ export default function RedTeamSuite() {
 
         <div style={kpiBox}>
           <div style={kpiLabel}>Overall Accuracy</div>
-          <div style={{ ...kpiVal, color: 'var(--primary-light)' }}>
+          <div style={{ ...kpiVal, color: 'var(--primary)' }}>
             {report ? `${(report.accuracy * 100).toFixed(1)}%` : '-'}
           </div>
         </div>
 
         <div style={kpiBox}>
           <div style={kpiLabel}>Mean Pipeline Latency</div>
-          <div style={{ ...kpiVal, color: 'var(--cyan)' }}>
+          <div style={{ ...kpiVal, color: 'var(--primary)' }}>
             {report ? `${report.avg_latency_ms.toFixed(1)} ms` : '-'}
           </div>
         </div>
@@ -139,8 +139,8 @@ export default function RedTeamSuite() {
               </tr>
             ) : (
               Object.entries(report.category_metrics).map(([cat, met]) => (
-                <tr key={cat} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                  <td style={{ padding: '10px 14px', fontWeight: 600 }}>{cat}</td>
+                <tr key={cat} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                  <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--text-main)' }}>{cat}</td>
                   <td style={{ padding: '10px 14px', fontFamily: 'var(--font-mono)' }}>{met.total}</td>
                   <td style={{ padding: '10px 14px', fontFamily: 'var(--font-mono)', color: 'var(--success)' }}>
                     {met.passed}
@@ -151,9 +151,9 @@ export default function RedTeamSuite() {
                       borderRadius: '6px',
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      background: 'rgba(16, 185, 129, 0.15)',
-                      color: '#34d399',
-                      border: '1px solid rgba(16, 185, 129, 0.3)',
+                      background: 'var(--success-bg)',
+                      color: 'var(--success)',
+                      border: '1px solid var(--success-border)',
                     }}>
                       {(met.rate * 100).toFixed(1)}%
                     </span>
@@ -169,11 +169,11 @@ export default function RedTeamSuite() {
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-card)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid var(--border-subtle)',
+  background: '#ffffff',
+  border: '1px solid var(--border-card)',
   borderRadius: '16px',
   padding: '22px',
+  boxShadow: 'var(--shadow-sm)',
 };
 
 const titleStyle: React.CSSProperties = {
@@ -183,10 +183,12 @@ const titleStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  color: 'var(--text-main)',
 };
 
 const kpiBox: React.CSSProperties = {
-  background: 'rgba(0, 0, 0, 0.35)',
+  background: 'var(--bg-subtle)',
+  border: '1px solid var(--border-subtle)',
   padding: '16px',
   borderRadius: '12px',
   textAlign: 'center',
@@ -196,9 +198,11 @@ const kpiLabel: React.CSSProperties = {
   fontSize: '0.75rem',
   color: 'var(--text-muted)',
   marginBottom: '4px',
+  fontWeight: 600,
 };
 
 const kpiVal: React.CSSProperties = {
   fontSize: '1.7rem',
   fontWeight: 800,
+  color: 'var(--text-main)',
 };

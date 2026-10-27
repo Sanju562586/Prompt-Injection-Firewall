@@ -30,9 +30,9 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
   if (!alert) return null;
 
   const isCritical = alert.severity.toUpperCase() === 'CRITICAL' || alert.severity.toUpperCase() === 'HIGH';
-  const themeColor = isCritical ? '#ef4444' : '#f59e0b';
-  const themeBg = isCritical ? 'rgba(239, 68, 68, 0.12)' : 'rgba(245, 158, 11, 0.12)';
-  const themeBorder = isCritical ? 'rgba(239, 68, 68, 0.4)' : 'rgba(245, 158, 11, 0.4)';
+  const themeColor = isCritical ? '#e11d48' : '#d97706';
+  const themeBg = isCritical ? 'var(--danger-bg)' : 'var(--warning-bg)';
+  const themeBorder = isCritical ? 'var(--danger-border)' : 'var(--warning-border)';
 
   return (
     <div style={{
@@ -42,18 +42,18 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'rgba(5, 8, 14, 0.75)',
+      background: 'rgba(29, 25, 43, 0.45)',
       backdropFilter: 'blur(8px)',
       padding: '1.5rem',
       animation: 'fadeIn 0.2s ease-out'
     }}>
       <div style={{
-        background: '#0d1117',
+        background: '#ffffff',
         border: `1px solid ${themeBorder}`,
-        borderRadius: '16px',
+        borderRadius: '18px',
         width: '100%',
         maxWidth: '560px',
-        boxShadow: `0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 30px ${isCritical ? 'rgba(239, 68, 68, 0.25)' : 'rgba(245, 158, 11, 0.25)'}`,
+        boxShadow: `0 20px 40px -10px rgba(124, 92, 252, 0.15), 0 0 30px ${isCritical ? 'rgba(225, 29, 72, 0.15)' : 'rgba(217, 119, 6, 0.15)'}`,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column'
@@ -72,7 +72,7 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
               width: '40px',
               height: '40px',
               borderRadius: '10px',
-              background: isCritical ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+              background: '#ffffff',
               border: `1px solid ${themeBorder}`,
               display: 'flex',
               alignItems: 'center',
@@ -82,10 +82,10 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
               <ShieldAlert size={22} />
             </div>
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: themeColor, textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', color: themeColor, textTransform: 'uppercase' }}>
                 LLM Firewall Threat Interception
               </div>
-              <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#f0f6fc', fontWeight: 600 }}>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-main)', fontWeight: 700 }}>
                 {alert.alert_title}
               </h3>
             </div>
@@ -95,7 +95,7 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#8b949e',
+              color: 'var(--text-muted)',
               cursor: 'pointer',
               padding: '0.5rem',
               borderRadius: '8px',
@@ -117,13 +117,13 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '0.75rem',
-            background: 'rgba(22, 27, 34, 0.6)',
+            background: 'var(--bg-subtle)',
             padding: '1rem',
             borderRadius: '12px',
-            border: '1px solid rgba(48, 54, 61, 0.6)'
+            border: '1px solid var(--border-subtle)'
           }}>
             <div>
-              <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>Threat Level</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.25rem' }}>Threat Level</div>
               <span style={{
                 display: 'inline-block',
                 padding: '0.2rem 0.6rem',
@@ -139,23 +139,23 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
             </div>
 
             <div>
-              <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>Overall Risk</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: themeColor, fontFamily: 'monospace' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.25rem' }}>Overall Risk</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: themeColor, fontFamily: 'var(--font-mono)' }}>
                 {alert.risk_score.toFixed(3)}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>Firewall Action</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.25rem' }}>Firewall Action</div>
               <span style={{
                 display: 'inline-block',
                 padding: '0.2rem 0.6rem',
                 borderRadius: '6px',
                 fontSize: '0.8rem',
                 fontWeight: 700,
-                background: alert.decision === 'BLOCK' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(56, 189, 248, 0.15)',
-                color: alert.decision === 'BLOCK' ? '#ef4444' : '#38bdf8',
-                border: '1px solid rgba(48, 54, 61, 0.6)'
+                background: alert.decision === 'BLOCK' ? 'var(--danger-bg)' : 'var(--primary-bg)',
+                color: alert.decision === 'BLOCK' ? 'var(--danger)' : 'var(--primary)',
+                border: `1px solid ${alert.decision === 'BLOCK' ? 'var(--danger-border)' : 'var(--border-subtle)'}`
               }}>
                 {alert.decision}
               </span>
@@ -165,22 +165,22 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
           {/* Quarantined Documents Box (if RAG attack) */}
           {alert.quarantined_count > 0 && (
             <div style={{
-              background: 'rgba(239, 68, 68, 0.08)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
+              background: 'var(--danger-bg)',
+              border: '1px solid var(--danger-border)',
               borderRadius: '10px',
               padding: '0.9rem',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.4rem'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#f87171', fontWeight: 600, fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--danger)', fontWeight: 700, fontSize: '0.85rem' }}>
                 <FileWarning size={16} />
                 Quarantined Malicious Documents ({alert.quarantined_count})
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#c9d1d9' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-main)', fontWeight: 500 }}>
                 {alert.quarantined_titles.join(', ')}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#8b949e', fontStyle: 'italic', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '0.2rem' }}>
                 Shield protected the LLM by stripping the trojan instruction before response generation.
               </div>
             </div>
@@ -188,7 +188,7 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
 
           {/* Triggered Violations */}
           <div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#c9d1d9', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <AlertTriangle size={15} color={themeColor} />
               Detected Security Violations:
             </div>
@@ -197,37 +197,38 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
                 alert.violations.map((v, i) => (
                   <div key={i} style={{
                     fontSize: '0.78rem',
-                    padding: '0.5rem 0.75rem',
-                    borderRadius: '6px',
-                    background: 'rgba(22, 27, 34, 0.8)',
+                    padding: '0.55rem 0.8rem',
+                    borderRadius: '8px',
+                    background: '#ffffff',
+                    border: '1px solid var(--border-subtle)',
                     borderLeft: `3px solid ${themeColor}`,
-                    color: '#e6edf3',
-                    fontFamily: 'monospace'
+                    color: 'var(--text-main)',
+                    fontFamily: 'var(--font-mono)'
                   }}>
                     {v}
                   </div>
                 ))
               ) : (
-                <div style={{ fontSize: '0.8rem', color: '#8b949e' }}>Heuristic risk score elevated based on context.</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Heuristic risk score elevated based on context.</div>
               )}
             </div>
           </div>
 
           {/* Action Taken Summary */}
           <div style={{
-            background: 'rgba(56, 189, 248, 0.06)',
-            border: '1px solid rgba(56, 189, 248, 0.2)',
+            background: 'var(--primary-bg)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: '10px',
             padding: '0.85rem',
             fontSize: '0.82rem',
-            color: '#93c5fd',
+            color: 'var(--text-main)',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '0.6rem'
           }}>
-            <ShieldCheck size={18} style={{ marginTop: '0.1rem', flexShrink: 0 }} />
+            <ShieldCheck size={18} color="var(--primary)" style={{ marginTop: '0.1rem', flexShrink: 0 }} />
             <div>
-              <strong style={{ color: '#e0f2fe' }}>Firewall Mitigation: </strong>
+              <strong style={{ color: 'var(--primary)' }}>Firewall Mitigation: </strong>
               {alert.action_taken}
             </div>
           </div>
@@ -236,8 +237,8 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
         {/* Footer Actions */}
         <div style={{
           padding: '1rem 1.5rem',
-          background: 'rgba(22, 27, 34, 0.9)',
-          borderTop: '1px solid rgba(48, 54, 61, 0.8)',
+          background: 'var(--bg-subtle)',
+          borderTop: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-end',
@@ -250,9 +251,9 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
                 onInspectTelemetry();
               }}
               style={{
-                background: 'rgba(33, 38, 45, 0.9)',
-                color: '#c9d1d9',
-                border: '1px solid rgba(48, 54, 61, 0.8)',
+                background: '#ffffff',
+                color: 'var(--text-muted)',
+                border: '1px solid var(--border-card)',
                 padding: '0.55rem 1rem',
                 borderRadius: '8px',
                 fontSize: '0.82rem',
@@ -283,6 +284,7 @@ export const SecurityAlertModal: React.FC<SecurityAlertModalProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
+              boxShadow: `0 4px 12px ${isCritical ? 'rgba(225, 29, 72, 0.25)' : 'rgba(217, 119, 6, 0.25)'}`,
               transition: 'opacity 0.15s'
             }}
           >

@@ -81,18 +81,18 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'rgba(5, 8, 14, 0.8)',
+      background: 'rgba(29, 25, 43, 0.45)',
       backdropFilter: 'blur(8px)',
       padding: '1.5rem',
       animation: 'fadeIn 0.2s ease-out'
     }}>
       <div style={{
-        background: '#0d1117',
-        border: '1px solid #30363d',
-        borderRadius: '16px',
+        background: '#ffffff',
+        border: '1px solid var(--border-card)',
+        borderRadius: '18px',
         width: '100%',
         maxWidth: '520px',
-        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.8), 0 0 30px rgba(56, 189, 248, 0.15)',
+        boxShadow: '0 20px 40px -10px rgba(124, 92, 252, 0.15)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column'
@@ -100,8 +100,8 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
         {/* Header */}
         <div style={{
           padding: '1.25rem 1.5rem',
-          background: 'rgba(22, 27, 34, 0.95)',
-          borderBottom: '1px solid #30363d',
+          background: 'var(--bg-subtle)',
+          borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
@@ -111,20 +111,20 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              background: 'rgba(56, 189, 248, 0.15)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
+              background: 'var(--primary-bg)',
+              border: '1px solid var(--border-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#38bdf8'
+              color: 'var(--primary)'
             }}>
               <Settings size={20} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#f0f6fc', fontWeight: 600 }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700 }}>
                 LLM Provider Configuration
               </h3>
-              <div style={{ fontSize: '0.75rem', color: '#8b949e' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Connect live upstream models or use built-in semantic NLP
               </div>
             </div>
@@ -134,7 +134,7 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#8b949e',
+              color: 'var(--text-muted)',
               cursor: 'pointer',
               padding: '0.4rem',
               borderRadius: '6px'
@@ -150,10 +150,11 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
             <div style={{
               padding: '0.75rem 1rem',
               borderRadius: '8px',
-              background: 'rgba(46, 160, 67, 0.15)',
-              border: '1px solid #2ea043',
-              color: '#3fb950',
+              background: 'var(--success-bg)',
+              border: '1px solid var(--success-border)',
+              color: 'var(--success)',
               fontSize: '0.82rem',
+              fontWeight: 600,
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem'
@@ -164,7 +165,7 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
           )}
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: '#c9d1d9', fontWeight: 600, marginBottom: '0.4rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.4rem' }}>
               Inference Engine / Provider
             </label>
             <select
@@ -172,12 +173,13 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
               onChange={(e) => setProvider(e.target.value)}
               style={{
                 width: '100%',
-                padding: '0.7rem 0.9rem',
-                background: '#090d13',
-                border: '1px solid #30363d',
+                padding: '0.75rem 0.9rem',
+                background: '#faf9fd',
+                border: '1px solid var(--border-input)',
                 borderRadius: '8px',
-                color: '#f0f6fc',
-                fontSize: '0.85rem'
+                color: 'var(--text-main)',
+                fontSize: '0.88rem',
+                outline: 'none'
               }}
             >
               <option value="local">Local Neural QA Synthesizer (No API Key needed)</option>
@@ -189,11 +191,11 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
 
           {provider !== 'local' && (
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#c9d1d9', fontWeight: 600, marginBottom: '0.4rem' }}>
-                API Key {hasApiKey && <span style={{ color: '#3fb950', fontSize: '0.75rem', fontWeight: 400 }}>(Already configured in environment)</span>}
+              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.4rem' }}>
+                API Key {hasApiKey && <span style={{ color: 'var(--success)', fontSize: '0.75rem', fontWeight: 600 }}>(Configured in environment)</span>}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <Key size={16} color="#8b949e" style={{ position: 'absolute', left: '0.8rem' }} />
+                <Key size={16} color="var(--primary)" style={{ position: 'absolute', left: '0.8rem' }} />
                 <input
                   type="password"
                   value={apiKey}
@@ -201,12 +203,13 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
                   placeholder={hasApiKey ? '••••••••••••••••••••••••••••' : 'sk-...'}
                   style={{
                     width: '100%',
-                    padding: '0.7rem 0.9rem 0.7rem 2.4rem',
-                    background: '#090d13',
-                    border: '1px solid #30363d',
+                    padding: '0.75rem 0.9rem 0.75rem 2.4rem',
+                    background: '#faf9fd',
+                    border: '1px solid var(--border-input)',
                     borderRadius: '8px',
-                    color: '#f0f6fc',
-                    fontSize: '0.85rem'
+                    color: 'var(--text-main)',
+                    fontSize: '0.88rem',
+                    outline: 'none'
                   }}
                 />
               </div>
@@ -214,7 +217,7 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
           )}
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: '#c9d1d9', fontWeight: 600, marginBottom: '0.4rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.4rem' }}>
               Target Model Name
             </label>
             <input
@@ -224,23 +227,24 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
               placeholder="e.g. gpt-4o, llama3:latest, mistral"
               style={{
                 width: '100%',
-                padding: '0.7rem 0.9rem',
-                background: '#090d13',
-                border: '1px solid #30363d',
+                padding: '0.75rem 0.9rem',
+                background: '#faf9fd',
+                border: '1px solid var(--border-input)',
                 borderRadius: '8px',
-                color: '#f0f6fc',
-                fontSize: '0.85rem'
+                color: 'var(--text-main)',
+                fontSize: '0.88rem',
+                outline: 'none'
               }}
             />
           </div>
 
           {(provider === 'custom' || provider === 'ollama') && (
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#c9d1d9', fontWeight: 600, marginBottom: '0.4rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.4rem' }}>
                 Base Endpoint URL
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <Globe size={16} color="#8b949e" style={{ position: 'absolute', left: '0.8rem' }} />
+                <Globe size={16} color="var(--primary)" style={{ position: 'absolute', left: '0.8rem' }} />
                 <input
                   type="text"
                   value={baseUrl}
@@ -248,12 +252,13 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
                   placeholder={provider === 'ollama' ? 'http://localhost:11434' : 'https://api.groq.com/openai/v1'}
                   style={{
                     width: '100%',
-                    padding: '0.7rem 0.9rem 0.7rem 2.4rem',
-                    background: '#090d13',
-                    border: '1px solid #30363d',
+                    padding: '0.75rem 0.9rem 0.75rem 2.4rem',
+                    background: '#faf9fd',
+                    border: '1px solid var(--border-input)',
                     borderRadius: '8px',
-                    color: '#f0f6fc',
-                    fontSize: '0.85rem'
+                    color: 'var(--text-main)',
+                    fontSize: '0.88rem',
+                    outline: 'none'
                   }}
                 />
               </div>
@@ -266,18 +271,19 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
             justifyContent: 'flex-end',
             gap: '0.75rem',
             paddingTop: '0.75rem',
-            borderTop: '1px solid #21262d'
+            borderTop: '1px solid var(--border-subtle)'
           }}>
             <button
               type="button"
               onClick={onClose}
               style={{
-                background: 'transparent',
-                color: '#8b949e',
-                border: '1px solid #30363d',
+                background: '#ffffff',
+                color: 'var(--text-muted)',
+                border: '1px solid var(--border-card)',
                 padding: '0.55rem 1rem',
                 borderRadius: '8px',
                 fontSize: '0.82rem',
+                fontWeight: 600,
                 cursor: 'pointer'
               }}
             >
@@ -287,7 +293,7 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
               type="submit"
               disabled={isSaving}
               style={{
-                background: '#238636',
+                background: 'linear-gradient(135deg, #7c5cfc, #6a46f9)',
                 color: '#ffffff',
                 border: 'none',
                 padding: '0.55rem 1.25rem',
@@ -297,7 +303,8 @@ export const LLMSettingsModal: React.FC<LLMSettingsModalProps> = ({ isOpen, onCl
                 cursor: isSaving ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem'
+                gap: '0.4rem',
+                boxShadow: '0 4px 12px rgba(124, 92, 252, 0.25)'
               }}
             >
               <Save size={15} />

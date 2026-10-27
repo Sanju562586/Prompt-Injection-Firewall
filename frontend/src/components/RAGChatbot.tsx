@@ -58,7 +58,7 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
     {
       id: 'msg-welcome',
       role: 'assistant',
-      content: 'Welcome! I am your Enterprise AI Assistant, operating with continuous LLM Security Firewall protection.\n\nYou can ask any question grounded in the indexed knowledge base (corporate policies, engineering SOPs, finance, compliance) or test your own custom queries. Any injected malicious directives or poisoned retrieved documents will be intercepted and quarantined.',
+      content: 'Welcome! I am your Enterprise AI Assistant, operating with continuous LLM Security Firewall protection.\n\nYou can ask any question grounded in the indexed knowledge base (corporate policies, engineering SOPs, finance, compliance) or general knowledge topics. Any injected malicious directives or poisoned retrieved documents will be intercepted and quarantined.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     }
   ]);
@@ -156,7 +156,6 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
 
       setMessages(prev => [...prev, assistantMsg]);
 
-      // Pop-up window triggered whenever suspicious, malicious, or quarantined content is intercepted
       if (data.security_alert && data.security_alert.has_threat) {
         onTriggerAlert(data.security_alert);
       }
@@ -230,14 +229,14 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: 'calc(100vh - 120px)',
-      maxWidth: '1100px',
+      height: 'calc(100vh - 150px)',
+      maxWidth: '1150px',
       margin: '0 auto',
-      background: '#0d1117',
-      border: '1px solid #30363d',
-      borderRadius: '16px',
+      background: '#ffffff',
+      border: '1px solid var(--border-card)',
+      borderRadius: '20px',
       overflow: 'hidden',
-      boxShadow: '0 20px 40px -10px rgba(0,0,0,0.7)'
+      boxShadow: 'var(--shadow-md)'
     }}>
       <LLMSettingsModal
         isOpen={isSettingsOpen}
@@ -256,8 +255,8 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
       {/* Chat Top Banner */}
       <div style={{
         padding: '1rem 1.5rem',
-        background: 'rgba(22, 27, 34, 0.95)',
-        borderBottom: '1px solid #30363d',
+        background: '#ffffff',
+        borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -269,25 +268,25 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
             width: '38px',
             height: '38px',
             borderRadius: '10px',
-            background: 'rgba(56, 189, 248, 0.15)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
+            background: 'var(--primary-bg)',
+            border: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#38bdf8'
+            color: 'var(--primary)'
           }}>
             <Bot size={22} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <h2 style={{ margin: 0, fontSize: '1.05rem', color: '#f0f6fc', fontWeight: 600 }}>
+              <h2 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)', fontWeight: 700 }}>
                 Enterprise Knowledge Assistant
               </h2>
               <span style={{
-                background: 'rgba(56, 189, 248, 0.12)',
-                color: '#38bdf8',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                padding: '0.15rem 0.5rem',
+                background: 'var(--primary-bg)',
+                color: 'var(--primary)',
+                border: '1px solid var(--border-subtle)',
+                padding: '0.15rem 0.55rem',
                 borderRadius: '999px',
                 fontSize: '0.7rem',
                 fontWeight: 700
@@ -295,8 +294,8 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
                 {activeModel}
               </span>
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginTop: '0.1rem' }}>
-              Dual-Stage Firewall Protection (Input Scanner • RAG Quarantine • Risk Engine • Output Presidio)
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>
+              Multi-Layer Defense Active (Input Scanner • RAG Quarantine • Risk Engine • Output Scanner)
             </div>
           </div>
         </div>
@@ -306,57 +305,61 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
           <button
             onClick={() => setIsSettingsOpen(true)}
             style={{
-              background: 'rgba(33, 38, 45, 0.8)',
-              border: '1px solid #30363d',
-              color: '#c9d1d9',
-              padding: '0.4rem 0.75rem',
+              background: '#ffffff',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              padding: '0.45rem 0.8rem',
               borderRadius: '8px',
               fontSize: '0.75rem',
-              fontWeight: 500,
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem'
+              gap: '0.35rem',
+              transition: 'all 0.15s'
             }}
             title="Configure LLM Provider (OpenAI, Ollama, Custom)"
           >
-            <Settings size={14} color="#38bdf8" />
+            <Settings size={14} color="var(--primary)" />
             <span>LLM Config</span>
           </button>
 
           <button
             onClick={onNavigateToKnowledge}
             style={{
-              background: 'rgba(33, 38, 45, 0.8)',
-              border: '1px solid #30363d',
-              color: '#c9d1d9',
-              padding: '0.4rem 0.75rem',
+              background: '#ffffff',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              padding: '0.45rem 0.8rem',
               borderRadius: '8px',
               fontSize: '0.75rem',
-              fontWeight: 500,
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem'
+              gap: '0.35rem',
+              transition: 'all 0.15s'
             }}
           >
-            <FileText size={14} color="#58a6ff" />
+            <FileText size={14} color="var(--primary)" />
             <span>Knowledge Base</span>
           </button>
 
           <button
             onClick={clearChat}
             style={{
-              background: 'rgba(33, 38, 45, 0.8)',
-              border: '1px solid #30363d',
-              color: '#8b949e',
-              padding: '0.4rem 0.6rem',
+              background: '#ffffff',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              padding: '0.45rem 0.7rem',
               borderRadius: '8px',
               fontSize: '0.75rem',
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem'
+              gap: '0.35rem',
+              transition: 'all 0.15s'
             }}
             title="Clear Chat History"
           >
@@ -373,7 +376,8 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.25rem'
+        gap: '1.25rem',
+        background: 'var(--bg-page)'
       }}>
         {messages.map(msg => {
           const isUser = msg.role === 'user';
@@ -393,22 +397,23 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
             >
               {!isUser && (
                 <div style={{
-                  width: '34px',
-                  height: '34px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '10px',
                   background: isBlocked
-                    ? 'rgba(239, 68, 68, 0.2)'
+                    ? 'var(--danger-bg)'
                     : hasQuarantine
-                    ? 'rgba(245, 158, 11, 0.2)'
-                    : 'rgba(56, 189, 248, 0.15)',
-                  border: `1px solid ${isBlocked ? '#ef4444' : hasQuarantine ? '#f59e0b' : '#38bdf8'}`,
+                    ? 'var(--warning-bg)'
+                    : '#ffffff',
+                  border: `1px solid ${isBlocked ? 'var(--danger-border)' : hasQuarantine ? 'var(--warning-border)' : 'var(--border-card)'}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: isBlocked ? '#ef4444' : hasQuarantine ? '#f59e0b' : '#38bdf8',
+                  color: isBlocked ? 'var(--danger)' : hasQuarantine ? 'var(--warning)' : 'var(--primary)',
+                  boxShadow: 'var(--shadow-sm)',
                   flexShrink: 0
                 }}>
-                  {isBlocked ? <ShieldAlert size={18} /> : hasQuarantine ? <AlertTriangle size={18} /> : <Bot size={18} />}
+                  {isBlocked ? <ShieldAlert size={19} /> : hasQuarantine ? <AlertTriangle size={19} /> : <Bot size={19} />}
                 </div>
               )}
 
@@ -419,19 +424,29 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
                 alignItems: isUser ? 'flex-end' : 'flex-start'
               }}>
                 <div style={{
-                  padding: '0.9rem 1.15rem',
+                  padding: '1rem 1.25rem',
                   borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                   background: isUser
-                    ? '#1f6feb'
+                    ? 'linear-gradient(135deg, #7c5cfc, #6a46f9)'
                     : isBlocked
-                    ? 'rgba(239, 68, 68, 0.12)'
-                    : 'rgba(22, 27, 34, 0.95)',
-                  border: `1px solid ${isUser ? '#388bfd' : isBlocked ? 'rgba(239, 68, 68, 0.4)' : '#30363d'}`,
-                  color: '#f0f6fc',
-                  fontSize: '0.9rem',
-                  lineHeight: '1.55',
+                    ? 'var(--danger-bg)'
+                    : '#ffffff',
+                  border: isUser
+                    ? 'none'
+                    : isBlocked
+                    ? '1px solid var(--danger-border)'
+                    : '1px solid var(--border-card)',
+                  color: isUser
+                    ? '#ffffff'
+                    : isBlocked
+                    ? 'var(--critical)'
+                    : 'var(--text-main)',
+                  fontSize: '0.92rem',
+                  lineHeight: '1.6',
                   whiteSpace: 'pre-wrap',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                  boxShadow: isUser
+                    ? '0 4px 14px rgba(124, 92, 252, 0.22)'
+                    : 'var(--shadow-sm)'
                 }}>
                   {msg.content}
                 </div>
@@ -440,79 +455,83 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
                 {!isUser && msg.sources && msg.sources.length > 0 && (
                   <div style={{
                     width: '100%',
-                    background: 'rgba(22, 27, 34, 0.6)',
-                    border: '1px solid #30363d',
-                    borderRadius: '10px',
+                    background: '#ffffff',
+                    border: '1px solid var(--border-card)',
+                    borderRadius: '12px',
                     overflow: 'hidden',
+                    boxShadow: 'var(--shadow-sm)',
                     marginTop: '0.2rem'
                   }}>
                     <button
                       onClick={() => toggleSourceExpand(msg.id)}
                       style={{
                         width: '100%',
-                        padding: '0.45rem 0.8rem',
-                        background: 'transparent',
+                        padding: '0.55rem 0.9rem',
+                        background: 'var(--bg-subtle)',
                         border: 'none',
-                        color: '#8b949e',
-                        fontSize: '0.75rem',
+                        color: 'var(--text-muted)',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         cursor: 'pointer'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <FileText size={13} color="#58a6ff" />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <FileText size={14} color="var(--primary)" />
                         <span>Referenced Sources ({msg.sources.length})</span>
                         {hasQuarantine && (
                           <span style={{
-                            background: 'rgba(239, 68, 68, 0.2)',
-                            color: '#f87171',
-                            padding: '0.1rem 0.4rem',
+                            background: 'var(--danger-bg)',
+                            color: 'var(--danger)',
+                            border: '1px solid var(--danger-border)',
+                            padding: '0.12rem 0.45rem',
                             borderRadius: '4px',
                             fontSize: '0.68rem',
-                            fontWeight: 600
+                            fontWeight: 700
                           }}>
                             {msg.quarantinedCount} Malicious Doc Quarantined
                           </span>
                         )}
                       </div>
-                      {expandedSources[msg.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                      {expandedSources[msg.id] ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
                     </button>
 
                     {expandedSources[msg.id] && (
-                      <div style={{ padding: '0.6rem 0.8rem', borderTop: '1px solid #30363d', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div style={{ padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', background: '#ffffff' }}>
                         {msg.sources.map((src, sIdx) => (
                           <div
                             key={sIdx}
                             style={{
-                              padding: '0.5rem 0.65rem',
-                              borderRadius: '6px',
-                              background: src.is_safe ? 'rgba(33, 38, 45, 0.6)' : 'rgba(239, 68, 68, 0.1)',
-                              border: `1px solid ${src.is_safe ? '#30363d' : 'rgba(239, 68, 68, 0.4)'}`,
-                              fontSize: '0.75rem'
+                              padding: '0.65rem 0.75rem',
+                              borderRadius: '8px',
+                              background: src.is_safe ? 'var(--bg-subtle)' : 'var(--danger-bg)',
+                              border: `1px solid ${src.is_safe ? 'var(--border-subtle)' : 'var(--danger-border)'}`,
+                              fontSize: '0.78rem'
                             }}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
-                              <strong style={{ color: src.is_safe ? '#58a6ff' : '#f87171' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                              <strong style={{ color: src.is_safe ? 'var(--primary)' : 'var(--danger)' }}>
                                 {src.title}
                               </strong>
                               <span style={{
-                                padding: '0.1rem 0.4rem',
+                                padding: '0.12rem 0.45rem',
                                 borderRadius: '4px',
-                                fontSize: '0.65rem',
+                                fontSize: '0.68rem',
                                 fontWeight: 700,
-                                background: src.is_safe ? 'rgba(46, 160, 67, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                                color: src.is_safe ? '#3fb950' : '#f87171'
+                                background: src.is_safe ? 'var(--success-bg)' : 'var(--danger-bg)',
+                                color: src.is_safe ? 'var(--success)' : 'var(--danger)',
+                                border: `1px solid ${src.is_safe ? 'var(--success-border)' : 'var(--danger-border)'}`
                               }}>
                                 {src.is_safe ? 'VERIFIED SAFE' : 'QUARANTINED'}
                               </span>
                             </div>
-                            <div style={{ color: '#8b949e', fontSize: '0.72rem', fontStyle: 'italic' }}>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontStyle: 'italic' }}>
                               {src.snippet}
                             </div>
                             {src.quarantine_reason && (
-                              <div style={{ color: '#f87171', fontSize: '0.7rem', marginTop: '0.25rem', fontWeight: 600 }}>
+                              <div style={{ color: 'var(--danger)', fontSize: '0.72rem', marginTop: '0.3rem', fontWeight: 600 }}>
                                 Violation: {src.quarantine_reason}
                               </div>
                             )}
@@ -523,25 +542,25 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
                   </div>
                 )}
 
-                <div style={{ fontSize: '0.7rem', color: '#6e7681', margin: '0 0.3rem' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', margin: '0 0.3rem' }}>
                   {msg.timestamp}
                 </div>
               </div>
 
               {isUser && (
                 <div style={{
-                  width: '34px',
-                  height: '34px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '10px',
-                  background: 'rgba(31, 111, 235, 0.2)',
-                  border: '1px solid #1f6feb',
+                  background: 'linear-gradient(135deg, #7c5cfc, #9d85fc)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#58a6ff',
+                  color: '#ffffff',
+                  boxShadow: '0 2px 8px rgba(124, 92, 252, 0.25)',
                   flexShrink: 0
                 }}>
-                  <User size={18} />
+                  <User size={19} />
                 </div>
               )}
             </div>
@@ -549,33 +568,34 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
         })}
 
         {isLoading && (
-          <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', animation: 'pulse 1.5s infinite' }}>
+          <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
             <div style={{
-              width: '34px',
-              height: '34px',
+              width: '36px',
+              height: '36px',
               borderRadius: '10px',
-              background: 'rgba(56, 189, 248, 0.15)',
-              border: '1px solid #38bdf8',
+              background: 'var(--primary-bg)',
+              border: '1px solid var(--border-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#38bdf8'
+              color: 'var(--primary)'
             }}>
-              <Bot size={18} />
+              <Bot size={19} />
             </div>
             <div style={{
-              padding: '0.75rem 1.1rem',
+              padding: '0.85rem 1.2rem',
               borderRadius: '16px',
-              background: 'rgba(22, 27, 34, 0.8)',
-              border: '1px solid #30363d',
-              color: '#8b949e',
+              background: '#ffffff',
+              border: '1px solid var(--border-card)',
+              color: 'var(--text-muted)',
               fontSize: '0.85rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem'
+              gap: '0.6rem',
+              boxShadow: 'var(--shadow-sm)'
             }}>
-              <RefreshCw size={14} className="spin" />
-              Retrieving indexed documents & running 7-stage firewall scans...
+              <RefreshCw size={14} className="spin" color="var(--primary)" />
+              Retrieving indexed documents & running firewall verification...
             </div>
           </div>
         )}
@@ -586,8 +606,8 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
       {/* Input Form Bar */}
       <div style={{
         padding: '1rem 1.5rem',
-        background: 'rgba(22, 27, 34, 0.95)',
-        borderTop: '1px solid #30363d'
+        background: '#ffffff',
+        borderTop: '1px solid var(--border-card)'
       }}>
         <form
           onSubmit={(e) => {
@@ -600,16 +620,16 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             style={{
-              background: 'rgba(33, 38, 45, 0.8)',
-              border: '1px solid #30363d',
+              background: 'var(--primary-bg)',
+              border: '1px solid var(--border-subtle)',
               borderRadius: '10px',
               padding: '0.75rem',
-              color: '#8b949e',
+              color: 'var(--primary)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'color 0.15s'
+              transition: 'all 0.15s'
             }}
             title="Upload and index a text document (.txt, .md, .json)"
           >
@@ -620,18 +640,18 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask a question grounded in knowledge documents, or test a prompt..."
+            placeholder="Ask a question grounded in knowledge documents, or test a general prompt..."
             disabled={isLoading}
             style={{
               flex: 1,
-              padding: '0.75rem 1.1rem',
+              padding: '0.8rem 1.15rem',
               borderRadius: '10px',
-              background: '#090d13',
-              border: '1px solid #30363d',
-              color: '#f0f6fc',
-              fontSize: '0.88rem',
+              background: '#faf9fd',
+              border: '1px solid var(--border-input)',
+              color: 'var(--text-main)',
+              fontSize: '0.9rem',
               outline: 'none',
-              transition: 'border-color 0.15s'
+              transition: 'all 0.15s'
             }}
           />
 
@@ -639,17 +659,18 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
             type="submit"
             disabled={isLoading || !inputValue.trim()}
             style={{
-              padding: '0.75rem 1.3rem',
+              padding: '0.8rem 1.4rem',
               borderRadius: '10px',
-              background: inputValue.trim() && !isLoading ? '#238636' : 'rgba(35, 134, 54, 0.3)',
-              color: '#ffffff',
+              background: inputValue.trim() && !isLoading ? 'linear-gradient(135deg, #7c5cfc, #6a46f9)' : 'var(--bg-subtle)',
+              color: inputValue.trim() && !isLoading ? '#ffffff' : 'var(--text-dim)',
               border: 'none',
-              fontSize: '0.88rem',
+              fontSize: '0.9rem',
               fontWeight: 600,
               cursor: inputValue.trim() && !isLoading ? 'pointer' : 'not-allowed',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.45rem',
+              boxShadow: inputValue.trim() && !isLoading ? '0 4px 12px rgba(124, 92, 252, 0.25)' : 'none',
               transition: 'all 0.15s'
             }}
           >
@@ -657,9 +678,9 @@ export const RAGChatbot: React.FC<RAGChatbotProps> = ({
             <Send size={15} />
           </button>
         </form>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.7rem', color: '#6e7681' }}>
-          <span>Protected by Multi-Layer LLM Firewall (Input Scanner • RAG Quarantine • Risk Engine • Output Presidio)</span>
-          <span style={{ color: '#38bdf8', cursor: 'pointer' }} onClick={onNavigateToTelemetry}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.45rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+          <span>Protected by Multi-Layer LLM Firewall (Input Scanner • RAG Quarantine • Risk Engine • Output Scanner)</span>
+          <span style={{ color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }} onClick={onNavigateToTelemetry}>
             Inspect Firewall Telemetry →
           </span>
         </div>

@@ -49,16 +49,16 @@ export default function AuditTrail() {
     <div style={cardStyle}>
       <div style={titleStyle}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Lock size={18} color="var(--cyan)" />
+          <Lock size={18} color="var(--primary)" />
           <span>Cryptographically Chained Audit Trail (Module 6)</span>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={handleVerify}
             style={{
-              background: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
-              color: '#34d399',
+              background: 'var(--primary-bg)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--primary)',
               padding: '6px 14px',
               borderRadius: '8px',
               fontSize: '0.8rem',
@@ -76,12 +76,13 @@ export default function AuditTrail() {
             onClick={fetchEvents}
             disabled={loading}
             style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid var(--border-subtle)',
+              background: '#ffffff',
+              border: '1px solid var(--border-card)',
               color: 'var(--text-muted)',
               padding: '6px 12px',
               borderRadius: '8px',
               fontSize: '0.8rem',
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -96,13 +97,14 @@ export default function AuditTrail() {
 
       {verified && (
         <div style={{
-          background: 'rgba(16, 185, 129, 0.12)',
-          border: '1px solid rgba(16, 185, 129, 0.35)',
-          color: '#34d399',
+          background: 'var(--success-bg)',
+          border: '1px solid var(--success-border)',
+          color: 'var(--success)',
           padding: '12px 16px',
           borderRadius: '10px',
           marginBottom: '16px',
           fontSize: '0.84rem',
+          fontWeight: 600,
         }}>
           <strong>SHA-256 Hash Chain Validated:</strong> All audit records verified cryptographically tamper-evident from GENESIS block to HEAD. Zero broken links detected.
         </div>
@@ -135,11 +137,11 @@ export default function AuditTrail() {
                 const prev = (e.prev_hash || 'GENESIS').substring(0, 8);
                 const curr = (e.record_hash || '').substring(0, 8);
                 return (
-                  <tr key={e.event_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <tr key={e.event_id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                     <td style={{ ...tdStyle, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                       {new Date(e.timestamp * 1000).toLocaleTimeString()}
                     </td>
-                    <td style={{ ...tdStyle, color: 'var(--cyan)', fontWeight: 600 }}>{e.event_type}</td>
+                    <td style={{ ...tdStyle, color: 'var(--primary)', fontWeight: 600 }}>{e.event_type}</td>
                     <td style={{ ...tdStyle, fontFamily: 'var(--font-mono)' }}>{e.request_id}</td>
                     <td style={{ ...tdStyle, fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{e.risk_score.toFixed(2)}</td>
                     <td style={tdStyle}>
@@ -148,20 +150,21 @@ export default function AuditTrail() {
                         borderRadius: '6px',
                         fontSize: '0.72rem',
                         fontWeight: 600,
-                        background: 'rgba(255, 255, 255, 0.06)',
+                        background: 'var(--bg-subtle)',
+                        color: 'var(--text-main)',
                       }}>
                         {e.risk_level}
                       </span>
                     </td>
                     <td style={tdStyle}>
                       <span style={{
-                        padding: '2px 8px',
+                        padding: '3px 8px',
                         borderRadius: '6px',
                         fontSize: '0.72rem',
                         fontWeight: 700,
-                        background: isBlock ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
-                        color: isBlock ? '#f87171' : '#34d399',
-                        border: `1px solid ${isBlock ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
+                        background: isBlock ? 'var(--danger-bg)' : 'var(--success-bg)',
+                        color: isBlock ? 'var(--danger)' : 'var(--success)',
+                        border: `1px solid ${isBlock ? 'var(--danger-border)' : 'var(--success-border)'}`,
                       }}>
                         {e.decision}
                       </span>
@@ -184,11 +187,11 @@ export default function AuditTrail() {
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-card)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid var(--border-subtle)',
+  background: '#ffffff',
+  border: '1px solid var(--border-card)',
   borderRadius: '16px',
   padding: '22px',
+  boxShadow: 'var(--shadow-sm)',
 };
 
 const titleStyle: React.CSSProperties = {
@@ -198,6 +201,7 @@ const titleStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  color: 'var(--text-main)',
 };
 
 const thStyle: React.CSSProperties = {

@@ -197,7 +197,7 @@ export default function ThreatSandbox({ onSimulationComplete }: { onSimulationCo
 
         {/* Risk Meter Gauge */}
         <div style={{
-          background: 'rgba(10, 15, 29, 0.85)',
+          background: 'var(--bg-subtle)',
           border: '1px solid var(--border-subtle)',
           borderRadius: '12px',
           padding: '16px',
@@ -318,10 +318,12 @@ export default function ThreatSandbox({ onSimulationComplete }: { onSimulationCo
 
         {/* Forensic Justification */}
         <div style={{ fontSize: '0.82rem' }}>
-          <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Forensic Explanation:</div>
+          <div style={{ color: 'var(--text-muted)', marginBottom: '4px', fontWeight: 600 }}>Forensic Explanation:</div>
           <div style={{
             fontFamily: 'var(--font-mono)',
-            background: 'rgba(0, 0, 0, 0.45)',
+            background: 'var(--primary-bg)',
+            border: '1px solid var(--border-subtle)',
+            color: 'var(--text-main)',
             padding: '10px 12px',
             borderRadius: '8px',
             fontSize: '0.78rem',
@@ -336,11 +338,11 @@ export default function ThreatSandbox({ onSimulationComplete }: { onSimulationCo
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-card)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid var(--border-subtle)',
+  background: '#ffffff',
+  border: '1px solid var(--border-card)',
   borderRadius: '16px',
   padding: '22px',
+  boxShadow: 'var(--shadow-sm)',
 };
 
 const titleStyle: React.CSSProperties = {
@@ -350,20 +352,21 @@ const titleStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  color: 'var(--text-main)',
 };
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '0.82rem',
   color: 'var(--text-muted)',
-  fontWeight: 500,
+  fontWeight: 600,
   marginBottom: '6px',
 };
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: 'var(--bg-input)',
-  border: '1px solid var(--border-subtle)',
+  background: '#faf9fd',
+  border: '1px solid var(--border-input)',
   borderRadius: '10px',
   color: 'var(--text-main)',
   padding: '12px',
@@ -374,18 +377,19 @@ const inputStyle: React.CSSProperties = {
 };
 
 const chipStyle: React.CSSProperties = {
-  background: 'rgba(255, 255, 255, 0.05)',
+  background: 'var(--primary-bg)',
   border: '1px solid var(--border-subtle)',
-  color: 'var(--text-muted)',
-  padding: '5px 12px',
+  color: 'var(--primary)',
+  padding: '6px 12px',
   borderRadius: '8px',
   fontSize: '0.75rem',
   cursor: 'pointer',
-  fontWeight: 500,
+  fontWeight: 600,
+  transition: 'all 0.15s',
 };
 
 const stepStyle: React.CSSProperties = {
-  background: 'rgba(10, 15, 29, 0.85)',
+  background: 'var(--bg-subtle)',
   border: '1px solid var(--border-subtle)',
   borderRadius: '10px',
   padding: '8px 12px',
@@ -398,8 +402,8 @@ const stepNumStyle: React.CSSProperties = {
   width: '22px',
   height: '22px',
   borderRadius: '50%',
-  background: 'rgba(99, 102, 241, 0.2)',
-  color: 'var(--primary-light)',
+  background: 'var(--primary-bg)',
+  color: 'var(--primary)',
   fontSize: '0.75rem',
   fontWeight: 700,
   display: 'flex',
@@ -410,6 +414,7 @@ const stepNumStyle: React.CSSProperties = {
 const stepNameStyle: React.CSSProperties = {
   fontSize: '0.82rem',
   fontWeight: 600,
+  color: 'var(--text-main)',
 };
 
 const stepDescStyle: React.CSSProperties = {
@@ -423,7 +428,7 @@ const badgeStatus = (type: 'good' | 'bad'): React.CSSProperties => ({
   fontWeight: 700,
   padding: '2px 8px',
   borderRadius: '6px',
-  background: type === 'good' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-  color: type === 'good' ? '#34d399' : '#f87171',
-  border: `1px solid ${type === 'good' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+  background: type === 'good' ? 'var(--success-bg)' : 'var(--danger-bg)',
+  color: type === 'good' ? 'var(--success)' : 'var(--danger)',
+  border: `1px solid ${type === 'good' ? 'var(--success-border)' : 'var(--danger-border)'}`,
 });
